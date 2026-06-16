@@ -13,7 +13,7 @@ import ContactView from './components/ContactView';
 import hummingbirdLogo from './assets/images/regenerated_image_1781625058014.webp';
 
 // Icons
-import { Leaf, ShoppingBag, User, Clock, MapPin, Heart, ArrowRight } from 'lucide-react';
+import { Leaf, ShoppingBag, User, Clock, MapPin, Heart, ArrowRight, Menu, X } from 'lucide-react';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<string>('home');
@@ -21,6 +21,7 @@ export default function App() {
   const [memberProfile, setMemberProfile] = useState<MemberProfile | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   // Nav pages mapping
   const navLinks = [
@@ -119,7 +120,7 @@ export default function App() {
               <img 
                 src={hummingbirdLogo} 
                 alt="Hummingbird Cafe" 
-                className="h-14 w-auto object-contain"
+                className="h-11 w-auto object-contain"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -154,33 +155,40 @@ export default function App() {
           </nav>
 
           {/* Actions: Cart, Profile Icons */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5">
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 text-gray-300 hover:text-white transition-all flex items-center justify-center cursor-pointer"
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
             
             {/* Account Icon System */}
             <button
               onClick={() => setCurrentView('members')}
-              className={`p-2.5 rounded-full border transition-all flex items-center justify-center relative cursor-pointer ${
+              className={`p-2 transition-all flex items-center justify-center relative cursor-pointer ${
                 isLoggedIn 
-                  ? 'bg-primary-green/20 border-[#689628]/40 text-[#A7CCED]' 
-                  : 'bg-white/5 border-white/5 text-gray-300 hover:text-white hover:bg-white/10'
+                  ? 'text-[#A7CCED]' 
+                  : 'text-gray-300 hover:text-white'
               }`}
               title={isLoggedIn ? `Logged in as ${memberProfile?.name}` : 'Login / Member portal'}
             >
-              <User className="w-4 h-4" />
+              <User className="w-5 h-5" />
               {isLoggedIn && (
-                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary-green rounded-full border-2 border-[#191919]" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary-green rounded-full border border-[#191919]" />
               )}
             </button>
 
             {/* Shopify Cart system Icon count */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="p-2.5 bg-white/5 border border-white/5 rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center relative cursor-pointer"
+              className="p-2 text-gray-300 hover:text-white transition-all flex items-center justify-center relative cursor-pointer"
               title="View your harvest basket"
             >
-              <ShoppingBag className="w-4 h-4" />
+              <ShoppingBag className="w-5 h-5" />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-[#A7CCED] text-[#191919] text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#191919] animate-pulse">
+                <span className="absolute -top-1 -right-1 bg-[#A7CCED] text-[#191919] text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#191919] animate-pulse">
                   {cartItemsCount}
                 </span>
               )}
@@ -190,24 +198,27 @@ export default function App() {
         </div>
       </header>
 
-      {/* 3. Mobile Navigation Quick-Action Bar */}
-      <div className="md:hidden sticky top-[80px] z-30 bg-[#121212]/95 border-b border-white/5 overflow-x-auto">
-        <div className="flex gap-1.5 px-4 py-2.5 scrollbar-none">
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-30 bg-[#121212]/95 pt-24 px-6 flex flex-col gap-4">
           {navLinks.map((link) => (
             <button
               key={link.key}
-              onClick={() => setCurrentView(link.key)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all shrink-0 ${
+              onClick={() => {
+                setCurrentView(link.key);
+                setIsMobileMenuOpen(false);
+              }}
+              className={`p-4 rounded-xl text-left text-sm font-semibold transition-all ${
                 currentView === link.key
-                  ? 'bg-primary-green text-white font-semibold'
-                  : 'bg-white/5 text-gray-300'
+                  ? 'bg-primary-green/20 text-primary-green'
+                  : 'text-white'
               }`}
             >
               {link.label}
             </button>
           ))}
         </div>
-      </div>
+      )}
 
       {/* 4. Main Atmospheric Body */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-10 z-10">
