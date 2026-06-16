@@ -1,0 +1,6 @@
+{
+  "name": "Hummingbird Cafe",
+  "description": "Lush, rainforest-themed cafe and community hub with sustainable bites, events, and membership perks.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
