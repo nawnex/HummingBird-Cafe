@@ -47,12 +47,12 @@ export default function MenuView({ onAddToCart, isLoggedIn }: MenuViewProps) {
     <div className="space-y-8 font-sans pb-20">
       {/* Intro Header */}
       <div className="text-center md:text-left space-y-3">
-        <span className="text-xs font-bold text-primary-green uppercase tracking-widest block">Clean Ecotrust Sourcing</span>
+        <span className="text-xs font-bold text-primary-green uppercase tracking-widest block">What we serve</span>
         <h1 className="text-3xl md:text-5xl font-serif text-white tracking-tight">
           Nourishment <span className="text-[#A7CCED] italic">With Purpose</span>
         </h1>
         <p className="text-sm text-gray-400 max-w-2xl">
-          Sourced and grown locally, 100% organic, supporting sustainable rain-forest conservation with every single order. Look for regional allergens listed inside each interactive card.
+          Sourced and grown locally, 100% organic, for you to enjoy. Look for regional allergens listed inside each interactive card.
         </p>
 
         {/* Dynamic Discount Alert Indicator */}
@@ -273,7 +273,7 @@ export default function MenuView({ onAddToCart, isLoggedIn }: MenuViewProps) {
 
               {/* Nutritional Grid */}
               <div className="space-y-2">
-                <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Trace Eco-Nutrient Data</h4>
+                <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Nutritional Data</h4>
                 <div className="grid grid-cols-4 gap-2 text-center text-xs">
                   <div className="p-2 bg-black/35 rounded-lg border border-white/5">
                     <span className="text-gray-500 block text-[10px]">Calories</span>
@@ -306,7 +306,7 @@ export default function MenuView({ onAddToCart, isLoggedIn }: MenuViewProps) {
                 ) : (
                   <span className="text-xl font-bold text-[#A7CCED]">£{selectedItem.price.toFixed(2)}</span>
                 )}
-                <span className="text-[10px] text-gray-400">Carbon offset certified</span>
+                <span className="text-[10px] text-gray-400">Nutritional Information</span>
               </div>
 
               <div className="flex gap-2">

@@ -109,7 +109,7 @@ export default function MembersView({ isLoggedIn, memberProfile, onLogin, onLogo
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="p-4 bg-black/40 rounded-xl border border-white/5 flex flex-col justify-between">
-                <span className="text-[10px] text-gray-500 uppercase tracking-wide block">Carbon points balance</span>
+                <span className="text-[10px] text-gray-500 uppercase tracking-wide block">Points balance</span>
                 <span className="text-2xl font-bold text-primary-green mt-1">{memberProfile.points} pts</span>
                 <span className="text-[9px] text-gray-400 mt-2 block">100 points = 1 free beverage</span>
               </div>
@@ -119,7 +119,7 @@ export default function MembersView({ isLoggedIn, memberProfile, onLogin, onLogo
                   <TreePine className="w-5 h-5 text-primary-green shrink-0" />
                   12
                 </span>
-                <span className="text-[9px] text-gray-400 mt-2 block">In Oregon Conservation Reforest</span>
+                <span className="text-[9px] text-gray-400 mt-2 block">In local reforestation projects</span>
               </div>
               <div className="p-4 bg-black/40 rounded-xl border border-white/5 flex flex-col justify-between">
                 <span className="text-[10px] text-gray-500 uppercase tracking-wide block">All-time Savings</span>
@@ -183,9 +183,9 @@ export default function MembersView({ isLoggedIn, memberProfile, onLogin, onLogo
                 <div className="p-2.5 bg-[#A7CCED]/15 text-[#A7CCED] rounded-lg w-fit">
                   <Truck className="w-5 h-5" />
                 </div>
-                <h3 className="font-serif text-sm font-semibold text-white">Carbon-Balanced Free Delivery</h3>
+                <h3 className="font-serif text-sm font-semibold text-white">Free Delivery</h3>
                 <p className="text-xs text-gray-400 leading-relaxed font-light">
-                  Order any lunch directly from our app within 5 miles for free zero-carbon bicycle delivery in customized reusable insulation packs.
+                  Order any lunch directly from our app within 5 miles for free bicycle delivery in customized reusable insulation packs.
                 </p>
               </div>
 

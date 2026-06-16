@@ -121,7 +121,7 @@ export default function CartDrawer({
                     <div>
                       <h4 className="text-xs font-bold text-[#A7CCED] uppercase tracking-wider">10% Member Discount Active</h4>
                       <p className="text-xs text-gray-200 mt-0.5">
-                        Your Hummingbird Card benefits matched! Saved <strong className="text-white">£{discountAmount.toFixed(2)}</strong> on this rainforest order.
+                        Your Hummingbird Card benefits matched! Saved <strong className="text-white">£{discountAmount.toFixed(2)}</strong> on this order.
                       </p>
                     </div>
                   </div>
@@ -266,11 +266,11 @@ const client = ShopifyBuy.buildClient({
                       </div>
                     )}
                     <div className="flex justify-between text-sm text-gray-400">
-                      <span>Eco-tax & Container Deposit</span>
+                      <span>Container Deposit</span>
                       <span className="text-[#A7CCED]">FREE</span>
                     </div>
                     <div className="border-t border-white/5 my-2 pt-2 flex justify-between text-base font-medium text-white">
-                      <span>Total Carbon-Balanced Price</span>
+                      <span>Total Price</span>
                       <span className="text-primary-green font-bold">£{finalTotal.toFixed(2)}</span>
                     </div>
                   </div>
@@ -301,7 +301,7 @@ const client = ShopifyBuy.buildClient({
               
               <div className="flex items-center justify-center gap-1 text-[10px] text-gray-400">
                 <AlertCircle className="w-3 h-3 text-[#A7CCED]" />
-                <span>Local Eco-Sourcing & Clean Ingredients Guaranteed</span>
+                <span>Local Sourcing & Clean Ingredients Guaranteed</span>
               </div>
             </div>
           )}

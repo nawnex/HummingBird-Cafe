@@ -6,16 +6,16 @@ export default function AboutView() {
     {
       icon: <Leaf className="w-5 h-5 text-primary-green" />,
       title: 'Ethical Supply Chains',
-      desc: 'Our coffee and organic teas are shade-grown under forest canopies, sustaining wildlife habitats.'
+      desc: 'Our coffee and organic teas are ethically sourced, supporting independent farming communities.'
     },
     {
       icon: <Heart className="w-5 h-5 text-primary-green" />,
       title: 'Grassroots Community',
-      desc: 'We donate 15% of net proceeds to neighborhood ecological parks and soil restoration trusts.'
+      desc: 'We donate 15% of net proceeds to neighborhood community programs.'
     },
     {
       icon: <Shield className="w-5 h-5 text-primary-green" />,
-      title: 'Zero-Waste Framework',
+      title: 'Community Commitment',
       desc: 'All food waste is composted and distributed to community gardeners absolutely free.'
     },
   ];
@@ -24,12 +24,12 @@ export default function AboutView() {
     {
       year: 'Spring 2024',
       title: 'The Seed is Planted',
-      desc: 'Ecologists restore a forgotten warehouse into a thriving soil-free indoor plant sanctuary.'
+      desc: 'Founders transform a forgotten industrial warehouse into a thriving local gathering spot.'
     },
     {
       year: 'Autumn 2024',
       title: 'The Roots Take Hold',
-      desc: 'Local neighbors gather to map out an eco-friendly community hub and safe social ecosystem.'
+      desc: 'Local neighbors gather to map out a warm community hub and safe social place.'
     },
     {
       year: 'Summer 2025',
@@ -39,7 +39,7 @@ export default function AboutView() {
     {
       year: '2026 & Beyond',
       title: 'The Majestic Canopy',
-      desc: 'Now offsetting tons of carbon while serving as the heart of our neighborhood biophilic union.'
+      desc: 'Serving neighborhood meals and coffee at the heart of our vibrant community hub.'
     }
   ];
 
@@ -88,8 +88,8 @@ export default function AboutView() {
           
           <div className="absolute bottom-6 left-6 right-6 p-4 bg-[#191919]/90 border border-primary-green/20 rounded-xl">
             <span className="text-[10px] font-bold text-primary-green uppercase tracking-wider">Sustainable Honor Roll</span>
-            <h4 className="text-sm font-serif text-white font-medium mt-1">100% Forest Sourced</h4>
-            <p className="text-[11px] text-gray-400 mt-1">From organic bamboo straws to wild-harvested teas, we prioritize the environment.</p>
+            <h4 className="text-sm font-serif text-white font-medium mt-1">100% Responsibly Sourced</h4>
+            <p className="text-[11px] text-gray-400 mt-1">From environmentally conscious packaging to ethically sourced tea, we prioritize quality.</p>
           </div>
         </div>
       </div>

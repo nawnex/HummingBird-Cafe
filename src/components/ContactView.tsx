@@ -38,7 +38,7 @@ export default function ContactView() {
           Drop Into <span className="text-[#A7CCED] italic">The Canopy</span>
         </h1>
         <p className="text-sm text-gray-400 max-w-2xl">
-          Have an ecology group looking for meeting rooms? Or simply want to ask about our ingredients or bulk botanicals? Reach out today; we respond with pure intent.
+          Have a community group looking for meeting rooms? Or simply want to ask about our ingredients or bulk botanicals? Reach out today; we respond with pure intent.
         </p>
       </div>
 
@@ -141,7 +141,7 @@ export default function ContactView() {
                 <CheckCircle className="w-5 h-5 text-primary-green shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-bold text-[#A7CCED]">Message Transmitted Responsibly!</h4>
-                  <p className="text-[11px] text-gray-300 mt-1">Our customer stewards have received your eco-parameters and back-logged details. We will email you within 24 hours.</p>
+                  <p className="text-[11px] text-gray-300 mt-1">Our customer stewards have received your parameters and back-logged details. We will email you within 24 hours.</p>
                 </div>
               </div>
             )}
@@ -164,7 +164,7 @@ export default function ContactView() {
                 <input
                   type="email"
                   required
-                  placeholder="rowan@ecology.org"
+                  placeholder="rowan@community.org"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-primary-green transition-all"
@@ -181,7 +181,7 @@ export default function ContactView() {
               >
                 <option value="General Inquiry" className="bg-[#191919]">General Hub Inquiry</option>
                 <option value="Event Space Rental" className="bg-[#191919]">Workshop & Greenhouse Space Rental</option>
-                <option value="Crops Sourcing" className="bg-[#191919]">Eco Sourcing / Supplier Pitches</option>
+                <option value="Crops Sourcing" className="bg-[#191919]">Sourcing / Supplier Pitches</option>
                 <option value="Membership card issue" className="bg-[#191919]">Membership Benefit / Card Issue</option>
               </select>
             </div>
@@ -208,7 +208,7 @@ export default function ContactView() {
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  Transmit Eco Post
+                  Transmit Post
                 </>
               )}
             </button>

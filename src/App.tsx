@@ -10,6 +10,7 @@ import EventsView from './components/EventsView';
 import MembersView from './components/MembersView';
 import AboutView from './components/AboutView';
 import ContactView from './components/ContactView';
+import hummingbirdLogo from './assets/images/regenerated_image_1781625058014.webp';
 
 // Icons
 import { Leaf, ShoppingBag, User, Clock, MapPin, Heart, ArrowRight } from 'lucide-react';
@@ -113,14 +114,21 @@ export default function App() {
             onClick={() => setCurrentView('home')}
             className="flex items-center gap-3 cursor-pointer group"
           >
-            {/* Hummingbird Cafe Logo */}
-            <img src="bird small.png" alt="Hummingbird Cafe Logo" className="h-12 w-auto" />
+            {/* Hummingbird Cafe Logo Image */}
+            <div className="flex items-center shrink-0 transition-opacity duration-300 group-hover:opacity-95">
+              <img 
+                src={hummingbirdLogo} 
+                alt="Hummingbird Cafe" 
+                className="h-14 w-auto object-contain"
+                referrerPolicy="no-referrer"
+              />
+            </div>
             <div>
               <span className="font-serif text-xl font-bold text-white tracking-tight group-hover:text-primary-green transition-colors">
                 Hummingbird
               </span>
               <span className="text-[9px] text-[#A7CCED] block font-semibold uppercase tracking-wider -mt-1">
-                Cafe & Community Hub
+                Community Hub
               </span>
             </div>
           </div>
@@ -265,10 +273,10 @@ export default function App() {
               <span className="font-serif text-lg font-bold text-white tracking-tight">Hummingbird</span>
             </div>
             <p className="text-gray-400 leading-relaxed font-light">
-              Designing living green retreats filled with premium botanical tea elixirs, sustainable bites, and neighborhood carbon-balancing initiatives.
+              Designing living green retreats filled with premium botanical tea elixirs, sustainable bites, and neighborhood community initiatives.
             </p>
             <div className="text-[10px] text-gray-500 font-mono tracking-tighter">
-              CO2 Neutral Certification ID: HMB-ECO-2026
+              {/* Placeholder */}
             </div>
           </div>
 
@@ -297,9 +305,9 @@ export default function App() {
             <h4 className="font-serif text-white font-medium">Sourcing Ethics</h4>
             <ul className="space-y-2 text-gray-400 font-light">
               <li>100% Organic, Pesticide-Free</li>
-              <li>Shade-Grown Rainforest Arabicas</li>
+              <li>Shade-Grown Arabicas</li>
               <li>Sustaining Forest Cooperatives</li>
-              <li>Reusable Eco-Casing Depositories</li>
+              <li>Reusable Container Program</li>
             </ul>
           </div>
 
@@ -325,7 +333,7 @@ export default function App() {
           <div className="flex gap-4">
             <a href="#privacy" className="hover:text-white transition-colors">Safety Regulations</a>
             <a href="#terms" className="hover:text-white transition-colors">Sourcing Terms</a>
-            <a href="#cookies" className="hover:text-white transition-colors">Cookie Composting</a>
+            <a href="#cookies" className="hover:text-white transition-colors">Cookie Policy</a>
           </div>
         </div>
       </footer>

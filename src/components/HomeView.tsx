@@ -3,6 +3,13 @@ import { MenuItem, Testimonial } from '../types';
 import { MENU_ITEMS, TESTIMONIALS } from '../data';
 import { Leaf, ArrowRight, Star, Heart, Calendar, ArrowLeft, Plus } from 'lucide-react';
 
+import saladImage from '../assets/images/salad_bowl_1781625701927.jpg';
+import wrapImage from '../assets/images/artisan_wrap_1781625718315.jpg';
+import smoothieImage from '../assets/images/fruit_smoothies_1781625734300.jpg';
+import coffeeImage from '../assets/images/premium_coffees_1781625748410.jpg';
+import toastImage from '../assets/images/gourmet_toasts_1781625764968.jpg';
+import teaImage from '../assets/images/teas_infusions_1781625780459.jpg';
+
 interface HomeViewProps {
   onNavigate: (page: string) => void;
   onAddToCart: (item: MenuItem) => void;
@@ -60,7 +67,7 @@ export default function HomeView({ onNavigate, onAddToCart }: HomeViewProps) {
           </h1>
           
           <p className="mt-4 text-sm md:text-base text-gray-200 font-light max-w-2xl leading-relaxed">
-            We believe in the power of connection and creating spaces where relationships flourish. Welcome to Hummingbird—your carbon-balanced, rainforest-themed community hub and specialty cafe.
+            We believe in the power of connection and creating spaces where relationships flourish. Welcome to Hummingbird—your community hub and specialty cafe.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
@@ -81,142 +88,43 @@ export default function HomeView({ onNavigate, onAddToCart }: HomeViewProps) {
         </div>
       </div>
 
-      {/* 2. Community Hub Spotlight */}
-      <section className="relative overflow-hidden bg-white/5 border border-white/5 rounded-3xl p-8 md:p-12 shadow-xl">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-[#A7CCED]/5 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-80 h-80 bg-primary-green/5 rounded-full blur-[100px] pointer-events-none" />
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-7 space-y-6">
-            <div className="text-xs font-bold text-primary-green uppercase tracking-widest flex items-center gap-2">
-              <Heart className="w-4 h-4 text-primary-green fill-primary-green" />
-              The Hummingbird Core Mission Statement
-            </div>
-            
-            <h2 className="text-3xl font-serif text-white tracking-tight">
-              A Living Classroom <span className="text-[#A7CCED]">& Gathering Space</span>
-            </h2>
-            
-            <p className="text-gray-300 leading-relaxed text-sm md:text-base">
-              At Hummingbird, our passion reaches far beyond pulling the perfect shade-grown espresso stream. We envision the cafe as a <strong>vital social ecosystem</strong>. Here, urban dwellers re-establish connections with living ecosystems in our micro-greenhouse, share forward-thinking ideas at open panels, and build local trust.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-sm text-gray-300">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-[#689628]/15 text-primary-green rounded-lg shrink-0">
-                  <Leaf className="w-4 h-4" />
-                </div>
-                <span>100% Carbon-Neutral Bites</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-[#A7CCED]/15 text-[#A7CCED] rounded-lg shrink-0">
-                  <Calendar className="w-4 h-4" />
-                </div>
-                <span>Weekly Eco-Workshops</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-[#A7CCED]/15 text-[#A7CCED] rounded-lg shrink-0">
-                  <Heart className="w-4 h-4" />
-                </div>
-                <span>15% Proceeds to Conservation</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-[#689628]/15 text-primary-green rounded-lg shrink-0">
-                  <Leaf className="w-4 h-4" />
-                </div>
-                <span>Thriving Soil-free Indoor Biomes</span>
-              </div>
-            </div>
-
-            <div className="pt-4">
-              <button
-                onClick={() => onNavigate('events')}
-                className="text-primary-green font-semibold inline-flex items-center gap-1 hover:text-[#A7CCED] transition-colors cursor-pointer"
-              >
-                Learn about upcoming meetups & events
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
+      {/* 2. Join Our Community */}
+      <section className="bg-white/5 border border-white/5 rounded-3xl p-12 text-center space-y-6">
+        <h2 className="text-4xl font-serif text-white">Join Our Community</h2>
+        <p className="text-gray-400 max-w-lg mx-auto">Connect with like-minded creatives through our exclusive membership clubs</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+          <div className="bg-black/40 p-6 rounded-2xl border border-white/5 space-y-2">
+            <h3 className="text-xl font-serif text-white">Explore Our Community</h3>
+            <p className="text-gray-400 text-sm">Connect with like-minded creatives through our exclusive clubs</p>
           </div>
-
-          <div className="lg:col-span-5 relative">
-            <img 
-              src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&q=80&w=600" 
-              alt="Community spotlight gatherings at Hummingbird" 
-              className="rounded-2xl border border-white/10 shadow-lg object-cover h-[340px] w-full"
-              referrerPolicy="no-referrer"
-            />
-            {/* Visual floating badge */}
-            <div className="absolute -bottom-5 -right-5 p-4 bg-[#191919] border border-primary-green/20 rounded-xl max-w-[190px] shadow-2xl">
-              <span className="text-[10px] font-bold text-[#A7CCED] uppercase block tracking-wider">Hummingbird Impact</span>
-              <span className="text-xl font-bold font-serif text-white">4,850+ kgs</span>
-              <span className="text-[11px] text-gray-400 block mt-1">Carbon offset by our local community so far.</span>
-            </div>
+          <div className="bg-black/40 p-6 rounded-2xl border border-white/5 space-y-2">
+            <h3 className="text-xl font-serif text-white">Book & Writing Clubs</h3>
+            <p className="text-gray-400 text-sm">Connect with like-minded creatives through our exclusive clubs</p>
           </div>
         </div>
       </section>
 
-      {/* 3. Weekly Highlights Grid */}
-      <section className="space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-          <div>
-            <span className="text-xs font-bold text-primary-green uppercase tracking-widest block mb-2">Ready for Your Perfect Cup? Order something tasty today!</span>
-            <h2 className="text-3xl font-serif text-white">Hummingbird Weekly Highlights</h2>
-          </div>
-          <button 
-            onClick={() => onNavigate('menu')}
-            className="px-5 py-2 border border-[#689628]/30 hover:border-primary-green/80 hover:bg-[#689628]/10 text-white rounded-full text-xs font-semibold tracking-wide transition-all self-start md:self-auto cursor-pointer"
-          >
-            See Full Gatherings Menu
-          </button>
+      {/* 3. What do we serve? */}
+      <section className="space-y-12 py-10">
+        <div className="text-center space-y-3">
+          <h2 className="text-4xl font-serif text-white">What do we serve?</h2>
+          <p className="text-gray-400">Nourishment for body, mind, and soul</p>
         </div>
 
-        {/* Floating Add Toast Feedback */}
-        {addedItemName && (
-          <div className="fixed bottom-6 left-6 z-50 bg-[#121212] border border-primary-green text-white text-xs py-3 px-5 rounded-full shadow-2xl flex items-center gap-2 animate-fade-in">
-            <span className="w-2 h-2 rounded-full bg-primary-green animate-ping" />
-            Added <strong className="text-primary-green">{addedItemName}</strong> to harvest basket!
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {highlights.map((item) => (
-            <div 
-              key={item.id}
-              className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden hover:border-[#689628]/30 transition-all duration-300 flex flex-col group"
-            >
-              <div className="h-48 overflow-hidden relative">
-                <img 
-                  src={item.image} 
-                  alt={item.name} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute top-3 right-3 px-3 py-1 bg-black/60 backdrop-blur-md text-xs font-medium text-[#A7CCED] border border-white/10 rounded-full">
-                  Weekly Hit
-                </div>
-              </div>
-              <div className="p-5 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-serif text-lg text-white font-semibold group-hover:text-primary-green transition-colors">
-                    {item.name}
-                  </h3>
-                  <p className="text-xs text-gray-400 capitalize mt-0.5">{item.category}</p>
-                  <p className="mt-2.5 text-xs text-gray-300 leading-relaxed line-clamp-2">
-                    {item.description}
-                  </p>
-                </div>
-
-                <div className="mt-5 pt-4 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-base font-bold text-[#A7CCED]">${item.price.toFixed(2)}</span>
-                  <button 
-                    onClick={() => handleAddWithFeedback(item)}
-                    className="p-2 bg-primary-green/15 text-primary-green hover:bg-primary-green hover:text-white rounded-full transition-all duration-300 cursor-pointer"
-                    title="Add to Basket"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { title: 'Fresh Salads', desc: 'Crisp greens and vibrant vegetables', img: saladImage },
+            { title: 'Artisan Wraps', desc: 'Crisp greens and vibrant vegetables', img: wrapImage },
+            { title: 'Smoothies', desc: 'Crisp greens and vibrant vegetables', img: smoothieImage },
+            { title: 'Premium Coffees', desc: 'Crisp greens and vibrant vegetables', img: coffeeImage },
+            { title: 'Gourmet Toasts', desc: 'Crisp greens and vibrant vegetables', img: toastImage },
+            { title: 'Teas & infusions', desc: 'Crisp greens and vibrant vegetables', img: teaImage },
+          ].map((item, i) => (
+            <div key={i} className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden hover:border-primary-green/30 transition-all">
+              <img src={item.img} alt={item.title} className="w-full h-40 object-cover" />
+              <div className="p-6">
+                <h3 className="text-xl text-white font-serif mb-2">{item.title}</h3>
+                <p className="text-gray-400 text-sm">{item.desc}</p>
               </div>
             </div>
           ))}
