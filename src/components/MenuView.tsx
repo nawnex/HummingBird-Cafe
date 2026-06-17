@@ -1,95 +1,111 @@
 import { useState, useMemo } from 'react';
-import { MenuItem } from '../types';
+import { MenuItem, CartItem } from '../types';
 import { MENU_ITEMS } from '../data';
 import { 
-  Search, Info, Check, Plus, AlertTriangle, Eye, Sparkles,
-  Flame, Sandwich, Egg, Soup, ChefHat, Cookie, IceCream, Candy, Salad, Cake, HelpCircle, RefreshCw, Utensils
+  Search, Info, Check, Plus, AlertTriangle, Eye, Sparkles, X, Clock, ShoppingBag, ChevronRight 
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface MenuViewProps {
   onAddToCart: (item: MenuItem) => void;
   isLoggedIn: boolean; // Member discount applied automatically!
+  onOpenCart?: () => void;
+  cart?: CartItem[];
 }
 
-// Available toppings with friendly prices & icons matching user-provided details
+// Available toppings with flat 0.80 price matching screenshots
 const AVAILABLE_TOPPINGS = [
-  { name: 'Tuna', price: 1.00, icon: '🐟', allergens: ['Fish'] },
-  { name: 'Ham', price: 1.20, icon: '🍖', allergens: [] },
-  { name: 'Onions', price: 0.45, icon: '🧅', allergens: [] },
-  { name: 'Tomato', price: 0.50, icon: '🍅', allergens: [] },
-  { name: 'Avocado', price: 1.50, icon: '🥑', allergens: [] },
-  { name: 'Sweetcorn', price: 0.40, icon: '🌽', allergens: [] },
-  { name: 'Cucumber', price: 0.40, icon: '🥒', allergens: [] },
-  { name: 'Baked Beans', price: 0.60, icon: '🥫', allergens: [] },
-  { name: 'Cheese', price: 0.90, icon: '🧀', allergens: ['Dairy'] }
+  { name: 'Tuna', price: 0.80, icon: '🐟', allergens: ['Fish'] },
+  { name: 'Ham', price: 0.80, icon: '🍖', allergens: [] },
+  { name: 'Onions', price: 0.80, icon: '🧅', allergens: [] },
+  { name: 'Tomato', price: 0.80, icon: '🍅', allergens: [] },
+  { name: 'Avocado', price: 0.80, icon: '🥑', allergens: [] },
+  { name: 'Sweetcorn', price: 0.80, icon: '🌽', allergens: [] },
+  { name: 'Cucumber', price: 0.80, icon: '🥒', allergens: [] },
+  { name: 'Baked Beans', price: 0.80, icon: '🥫', allergens: [] },
+  { name: 'Cheese', price: 0.80, icon: '🧀', allergens: ['Dairy'] }
 ];
 
-const BASE_SNACKS = [
-  { name: 'Artisan Toastie', basePrice: 3.50, category: 'Toasts & Toasties', img: 'https://images.unsplash.com/photo-1541532713592-79a0317b6b77?auto=format&fit=crop&q=80&w=800' },
-  { name: 'Premium Wrap', basePrice: 3.90, category: 'Wraps', img: 'https://images.unsplash.com/photo-1626700051175-6518c4793f4f?auto=format&fit=crop&q=80&w=800' },
-  { name: 'Vibrant Green Salad', basePrice: 4.50, category: 'Salads', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800' },
-  { name: 'Baked Jacket Potato', basePrice: 5.50, category: 'Jacket Potato', img: 'https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&q=80&w=800' }
+const CATEGORY_SUBTEXTS: Record<string, string> = {
+  'Toasts & Toasties': 'Personalise Your Snack: Switch, add or remove ingredients',
+  'Sandwiches': 'Freshly sliced farmhouse collection served chilled or pressed toast style',
+  'Wraps': 'Hand rolled in standard or wheat wrap, configure options',
+  'Breakfast Specials': 'Country farm-fresh elements cooked to order beautifully',
+  'Homemade': 'Stone oven baked or pan seared classic bistro recipes',
+  'Jacket Potato': 'Oven roasted Russet potatoes served hot in butter',
+  'Soups': 'Warm house crafted recipes served with toasted sourdough',
+  'Salads': 'Fresh romaine, spinach, or baby greens dressed locally',
+  'A Slice of Pie': 'Each served with a side of salad',
+  'Ice Cream': 'Range of toppings available',
+  'Sweet Corner': 'Pancakes, waffles and fresh yoghurt bowls',
+  'Cakes': 'Country layered sponge or baked cheesecakes'
+};
+
+const LEFT_CATEGORIES = [
+  'Toasts & Toasties',
+  'Sandwiches',
+  'Wraps',
+  'Breakfast Specials',
+  'Homemade',
+  'Jacket Potato'
 ];
 
-export default function MenuView({ onAddToCart, isLoggedIn }: MenuViewProps) {
+const RIGHT_CATEGORIES = [
+  'Soups',
+  'Salads',
+  'A Slice of Pie',
+  'Ice Cream',
+  'Sweet Corner',
+  'Cakes'
+];
+
+// Specific descriptions matching the screenshot
+const ITEM_SPECIFIC_SUBTEXTS: Record<string, string> = {
+  'Vegetable Pie': 'Each served with a side of salad',
+  'Spinach Pie': 'Each served with a side of salad',
+  'Cauliflower Cheese Pie': 'Each served with a side of salad',
+  'Chicken Pot Pie': 'Each served with a side of salad',
+  'Ice Cream Cone': 'Range of toppings available',
+  'Drip Milkshake': 'Strawberry, banana or chocolate milkshake with whipped cream & matching toppings.',
+  'Ice Cream Sundae': '3 Scoops of ice cream, sauce, syrup, sprinkles, whipped cream & marshmallows.',
+  'Banana Split': 'Banana, 3 scoops of ice cream, sauce or syrup & whipped cream.',
+  'Fruit Yoghurt Pot': 'A blend of Fresh Fruit, Oats & Yogurt',
+  'Fruit Salad': 'A fruit cocktail containing your favourites sliced into bite sizes pieces.',
+  'Pancakes': 'Only to fluffy homemade pancakes.',
+  'Waffles': 'Golden brown Belgian waffles.',
+  'Waffle Box': '10 Waffles with your choice of ingredients.',
+  'Scrambled Eggs on Toast': 'Your choice of up to 3 ingredients scrambled inside, spread out on your choice of toast.',
+  'Omelette': 'Your choice of up to 3 ingredients scrambled inside, with a side of toast.',
+  'Mini English': 'Sausage, bacon, fried egg, hash brown, baked beans & toast.',
+  'Vegan Breakfast': 'Combination of veggies lightly pan fried, with a side of grilled tomatoes, avocado & sourdough.',
+  'Large English Breakfast': 'Two sausages, two rashes of bacon, fried mushrooms, grilled tomatoes, two fried eggs, two hash browns, baked beans & toast.'
+};
+
+export default function MenuView({ onAddToCart, isLoggedIn, onOpenCart, cart }: MenuViewProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [feedbackItemName, setFeedbackItemName] = useState<string | null>(null);
-  
-  // Toppings & Sandboxing State
   const [activeHighlightTopping, setActiveHighlightTopping] = useState<string | null>(null);
-  const [sandboxBaseIndex, setSandboxBaseIndex] = useState(0);
-  const [sandboxToppings, setSandboxToppings] = useState<string[]>([]);
+  
+  // Custom Toppings Drawer States
+  const [drawerQuantity, setDrawerQuantity] = useState<number>(1);
+  const [drawerNotes, setDrawerNotes] = useState<string>('');
+  const [excludedIngredients, setExcludedIngredients] = useState<string[]>([]);
+  const [premiumToppings, setPremiumToppings] = useState<string[]>([]);
 
-  // Category Icon Sorter
-  const getCategoryIcon = (categoryName: string) => {
-    const norm = categoryName.toLowerCase();
-    if (norm.includes('toast')) return <Flame className="w-4 h-4 text-amber-500" />;
-    if (norm.includes('sandwich')) return <Sandwich className="w-4 h-4 text-orange-400" />;
-    if (norm.includes('breakfast')) return <Egg className="w-4 h-4 text-yellow-500" />;
-    if (norm.includes('soup')) return <Soup className="w-4 h-4 text-teal-400" />;
-    if (norm.includes('homemade')) return <ChefHat className="w-4 h-4 text-emerald-400" />;
-    if (norm.includes('wrap')) return <HelpCircle className="w-4 h-4 text-rose-400" />;
-    if (norm.includes('pie')) return <Cookie className="w-4 h-4 text-amber-600" />;
-    if (norm.includes('ice cream')) return <IceCream className="w-4 h-4 text-purple-400" />;
-    if (norm.includes('sweet')) return <Candy className="w-4 h-4 text-pink-400" />;
-    if (norm.includes('salad')) return <Salad className="w-4 h-4 text-green-400" />;
-    if (norm.includes('cake')) return <Cake className="w-4 h-4 text-rose-500" />;
-    if (norm.includes('potato')) return <Flame className="w-4 h-4 text-indigo-400" />;
-    return <Utensils className="w-4 h-4 text-[#A7CCED]" />;
-  };
+  // Calculate simulated cart count & price for header compatibility
+  const totalCartPrice = useMemo(() => {
+    if (!cart) return 0;
+    return cart.reduce((sum, item) => {
+      const price = isLoggedIn ? item.menuItem.price * 0.9 : item.menuItem.price;
+      return sum + (price * item.quantity);
+    }, 0);
+  }, [cart, isLoggedIn]);
 
-  // Dynamic Categories gathered from MENU_ITEMS
-  const categories = useMemo(() => {
-    const list = Array.from(new Set(MENU_ITEMS.map((item) => item.category)));
-    return [
-      { value: 'all', label: 'All Sourced Bites', icon: <Sparkles className="w-4 h-4 text-yellow-400" /> },
-      ...list.map(cat => ({ value: cat, label: cat, icon: getCategoryIcon(cat) }))
-    ];
-  }, []);
-
-  // Filter & Search logic
-  const filteredItems = useMemo(() => {
-    return MENU_ITEMS.filter((item) => {
-      const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-      const matchesSearch = 
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.ingredients.some(ing => ing.toLowerCase().includes(searchQuery.toLowerCase()));
-      
-      // If a specific topping highlight is active, prioritize items containing that ingredient or belonging to customisable categories
-      let matchesTopping = true;
-      if (activeHighlightTopping) {
-        const query = activeHighlightTopping.toLowerCase();
-        const itemText = (item.name + ' ' + item.description + ' ' + item.ingredients.join(' ')).toLowerCase();
-        matchesTopping = itemText.includes(query) || 
-          (['Toasts & Toasties', 'Wraps', 'Salads', 'Jacket Potato'].includes(item.category));
-      }
-
-      return matchesCategory && matchesSearch && matchesTopping;
-    });
-  }, [selectedCategory, searchQuery, activeHighlightTopping]);
+  const cartCount = useMemo(() => {
+    if (!cart) return 0;
+    return cart.reduce((sum, item) => sum + item.quantity, 0);
+  }, [cart]);
 
   const handleAddWithFeedback = (item: MenuItem) => {
     onAddToCart(item);
@@ -99,540 +115,556 @@ export default function MenuView({ onAddToCart, isLoggedIn }: MenuViewProps) {
     }, 2500);
   };
 
-  // Sandbox calculations
-  const currentBase = BASE_SNACKS[sandboxBaseIndex];
-  const toppingsCost = useMemo(() => {
-    return sandboxToppings.reduce((sum, topName) => {
-      const found = AVAILABLE_TOPPINGS.find(t => t.name === topName);
-      return sum + (found ? found.price : 0);
-    }, 0);
-  }, [sandboxToppings]);
-
-  const sandboxTotalPrice = currentBase.basePrice + toppingsCost;
-  const sandboxDiscountPrice = sandboxTotalPrice * 0.9;
-
-  const handleToggleSandboxTopping = (toppingName: string) => {
-    setSandboxToppings(prev => 
-      prev.includes(toppingName) 
-        ? prev.filter(t => t !== toppingName) 
-        : [...prev, toppingName]
-    );
+  // Helper flags
+  const isCustomisableCategory = (category: string) => {
+    return ['Toasts & Toasties', 'Sandwiches', 'Wraps', 'Salads', 'Jacket Potato', 'Breakfast Specials'].includes(category);
   };
 
-  const handleAddCustomSandboxItem = () => {
-    const chosenToppingsObjs = sandboxToppings.map(name => AVAILABLE_TOPPINGS.find(t => t.name === name)).filter(Boolean);
-    const calculatedAllergens = Array.from(new Set(chosenToppingsObjs.flatMap(o => o ? o.allergens : []))) as string[];
-    
-    const customItem: MenuItem = {
-      id: `custom-${selectedBaseName().toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`,
-      name: `Custom ${currentBase.name}`,
-      price: Number(sandboxTotalPrice.toFixed(2)),
-      category: currentBase.category,
-      description: `Harvest-customized freshly prepared snack topped beautifully with: ${sandboxToppings.length > 0 ? sandboxToppings.join(', ') : 'Plain Butter & Seasoning'}.`,
-      ingredients: ['Fresh Base', ...sandboxToppings],
-      allergens: calculatedAllergens,
-      nutritionalValue: { 
-        calories: 250 + (sandboxToppings.length * 45), 
-        protein: `${8 + (sandboxToppings.length * 2)}g`, 
-        carbs: '34g', 
-        fat: `${6 + (sandboxToppings.length * 3)}g` 
-      },
-      image: currentBase.img
+  const hasLargeOption = (category: string) => {
+    return ['Wraps', 'Homemade'].includes(category);
+  };
+
+  // Upgrades wrappers
+  const handleAddWithLargeOption = (item: MenuItem, premiumPrice: number) => {
+    const upgradedItem: MenuItem = {
+      ...item,
+      id: `${item.id}-large`,
+      name: `${item.name} (Large Portion)`,
+      price: item.price + premiumPrice,
+      description: `${item.description} (Upgraded to our satisfying Large Portion size).`
+    };
+    handleAddWithFeedback(upgradedItem);
+  };
+
+  const openCustomizeDrawer = (item: MenuItem) => {
+    setSelectedItem(item);
+    setDrawerQuantity(1);
+    setDrawerNotes('');
+    setExcludedIngredients([]);
+    setPremiumToppings([]);
+  };
+
+  const getSwitchableIngredients = (item: MenuItem): string[] => {
+    if (item.category === 'Salads') {
+      return ['Tomato', 'Egg', 'Cucumber', 'Peppers', 'Cheese', 'Lettuce', 'Mayo', 'Spinach'];
+    }
+    if (item.category === 'Sandwiches') {
+      return ['Turkey', 'Cheese', 'Lettuce', 'Mayo', 'Tomato', 'Egg', 'Hummus', 'Peppers'];
+    }
+    if (item.category === 'Toasts & Toasties') {
+      return ['Tomato', 'Garlic', 'Ham', 'Cheese', 'Peppers', 'Spinach', 'Avocado', 'Egg'];
+    }
+    if (item.category === 'Wraps') {
+      return ['Tuna', 'Egg', 'Rice', 'Cheese', 'Cucumber', 'Veggies', 'Hummus', 'Lettuce'];
+    }
+    if (item.category === 'Jacket Potato') {
+      return ['Butter', 'Cheese', 'Beans', 'Tuna'];
+    }
+    if (item.category === 'Breakfast Specials') {
+      return ['Sausage', 'Bacon', 'Egg', 'Hash Brown', 'Beans', 'Toast', 'Mushrooms', 'Tomatoes'];
+    }
+    return item.ingredients && item.ingredients.length > 0 ? item.ingredients : [];
+  };
+
+  const handleAddCustomizedDrawerItem = () => {
+    if (!selectedItem) return;
+
+    const PREMIUM_TOPPING_PRICE = 0.80;
+    const itemBasePrice = selectedItem.price;
+    const toppingsPrice = premiumToppings.length * PREMIUM_TOPPING_PRICE;
+    const singleItemPrice = itemBasePrice + toppingsPrice;
+
+    // Build customized details summary
+    const notesParts: string[] = [];
+    if (excludedIngredients.length > 0) {
+      notesParts.push(`Hold: ${excludedIngredients.join(', ')}`);
+    }
+    if (premiumToppings.length > 0) {
+      notesParts.push(`Extra: ${premiumToppings.join(', ')}`);
+    }
+    if (drawerNotes.trim() !== '') {
+      notesParts.push(`Instr: ${drawerNotes.trim()}`);
+    }
+
+    const customString = notesParts.join(' | ');
+
+    const customizedItem: MenuItem = {
+      ...selectedItem,
+      id: `${selectedItem.id}-custom-${Date.now()}`,
+      name: selectedItem.name + (premiumToppings.length > 0 ? ` (+${premiumToppings.join(', ')})` : ''),
+      price: singleItemPrice,
+      description: customString || selectedItem.description,
+      selectedDetails: customString || undefined
     };
 
-    onAddToCart(customItem);
-    setFeedbackItemName(customItem.name);
-    setTimeout(() => setFeedbackItemName(null), 2500);
-    // Reset toppings selection
-    setSandboxToppings([]);
+    // Add selected quantity to cart
+    for (let i = 0; i < drawerQuantity; i++) {
+      onAddToCart(customizedItem);
+    }
+
+    setFeedbackItemName(selectedItem.name);
+    setTimeout(() => {
+      setFeedbackItemName(null);
+    }, 2500);
+
+    setSelectedItem(null);
   };
 
-  function selectedBaseName() {
-    return currentBase.name;
-  }
+  // Filters categories and renders items dynamically
+  const getCategoryFilteredItems = (catName: string) => {
+    return MENU_ITEMS.filter((item) => {
+      if (item.category !== catName) return false;
+      
+      const matchesSearch = searchQuery === '' || 
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      let matchesTopping = true;
+      if (activeHighlightTopping) {
+        const query = activeHighlightTopping.toLowerCase();
+        const itemText = (item.name + ' ' + item.description + ' ' + item.ingredients.join(' ')).toLowerCase();
+        const customisable = isCustomisableCategory(item.category);
+        matchesTopping = itemText.includes(query) || customisable;
+      }
+      
+      return matchesSearch && matchesTopping;
+    });
+  };
 
-  return (
-    <div className="space-y-8 font-sans pb-20">
-      {/* Intro Header */}
-      <div className="text-center md:text-left space-y-3">
-        <span className="text-xs font-bold text-primary-green uppercase tracking-widest block">Harvest Fare & Craft Plates</span>
-        <h1 className="text-3xl md:text-5xl font-serif text-white tracking-tight">
-          Sourced <span className="text-[#A7CCED] italic">With Care</span>
-        </h1>
-        <p className="text-sm text-gray-400 max-w-2xl">
-          Freshly compiled organic ingredients handled with respect. Filter by category, search specific elements, or design your own culinary treat with our custom sandbox below.
-        </p>
+  const renderCategory = (categoryName: string) => {
+    const items = getCategoryFilteredItems(categoryName);
+    if (items.length === 0 && searchQuery !== '') return null;
 
-        {/* Dynamic Discount Alert Indicator */}
-        {isLoggedIn ? (
-          <div className="mt-3 p-3 bg-primary-green/10 border border-[#689628]/30 rounded-xl inline-flex items-center gap-2 text-xs text-[#A7CCED]">
-            <Sparkles className="w-4 h-4 text-primary-green animate-spin" />
-            <span>🎉 Hummingbird Card Active! <strong className="text-white">10% Automated Member Discount</strong> applied to all custom and standard items.</span>
+    return (
+      <div 
+        key={categoryName} 
+        className="flex flex-col pb-6"
+        id={`cat-section-${categoryName.toLowerCase().replace(/\s+/g, '-')}`}
+      >
+        {/* Vintage Framed Header exactly as in original menu picture */}
+        <div className="text-center mb-5">
+          <div className="border border-black px-8 py-3 tracking-widest text-[#2D2926] font-bold font-serif inline-block mx-auto bg-[#F3ECE0]/80 shadow-[2px_2px_0px_#2D2926] text-sm md:text-base uppercase rounded-none select-none">
+            {categoryName}
           </div>
-        ) : (
-          <div className="mt-2 text-xs text-gray-400">
-            <span>Are you a cardholder? Log in in the <strong className="text-white">Members</strong> section to unlock your automated, site-wide premium savings block.</span>
-          </div>
-        )}
-      </div>
-
-      {/* Floating Add Feedback toast */}
-      {feedbackItemName && (
-        <div className="fixed bottom-6 left-6 z-50 bg-[#191919] border border-primary-green text-white text-xs py-3 px-5 rounded-full shadow-2xl flex items-center gap-2 animate-fade-in">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#A7CCED] animate-bounce" />
-          Added <strong className="text-primary-green">{feedbackItemName}</strong> to basket!
-        </div>
-      )}
-
-      {/* Control Bar: Search & Category pills */}
-      <div className="flex flex-col gap-6 md:gap-4 md:flex-row md:items-center md:justify-between bg-white/5 border border-white/5 p-4 rounded-2xl">
-        {/* Search */}
-        <div className="relative w-full md:max-w-xs">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search sourdough, wrap fillings..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#121212]/80 border border-white/10 rounded-full pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-primary-green transition-all"
-          />
-        </div>
-
-        {/* Tabs pills list */}
-        <div className="flex flex-wrap gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none max-w-full">
-          {categories.map((cat) => (
-            <button
-              key={cat.value}
-              onClick={() => setSelectedCategory(cat.value)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide border transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
-                selectedCategory === cat.value
-                  ? 'bg-primary-green border-primary-green text-white shadow-lg'
-                  : 'bg-white/5 border-white/5 text-gray-300 hover:border-white/20 hover:bg-white/10'
-              }`}
-            >
-              {cat.icon}
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Structural Twin Columns: Left Grid, Right Chalkboard Sidebar */}
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
-        
-        {/* Left Column: Menu Cards */}
-        <div className="flex-1 w-full space-y-6">
-          
-          {/* Active Filter Helper Alert */}
-          {activeHighlightTopping && (
-            <div className="p-3 bg-primary-green/10 border border-[#689628]/35 rounded-xl flex items-center justify-between text-xs text-gray-300">
-              <div className="flex items-center gap-2">
-                <span className="text-sm">🔍</span>
-                <span>Showing items matching or customized with: <strong className="text-white">{activeHighlightTopping}</strong></span>
-              </div>
-              <button 
-                onClick={() => setActiveHighlightTopping(null)}
-                className="text-xs text-[#A7CCED] hover:underline hover:text-white"
-              >
-                Clear filter
-              </button>
-            </div>
+          {categoryName === 'Toasts & Toasties' && (
+            <p className="text-xs md:text-sm italic text-[#2D2926]/80 font-serif mt-2 select-none">
+               Personalise Your Snack: Switch, add or remove ingredients
+            </p>
           )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredItems.map((item) => {
-              const discountPrice = item.price * 0.9;
-              
-              // Check if item contains the highlighted topping
-              const containsHighlighted = activeHighlightTopping && (
-                item.name.toLowerCase().includes(activeHighlightTopping.toLowerCase()) ||
-                item.description.toLowerCase().includes(activeHighlightTopping.toLowerCase()) ||
-                item.ingredients.some(ing => ing.toLowerCase().includes(activeHighlightTopping.toLowerCase()))
-              );
-
-              return (
-                <div
-                  key={item.id}
-                  className={`bg-[#191919] border rounded-2xl overflow-hidden hover:border-[#689628]/40 transition-all duration-300 flex flex-col group relative ${
-                    containsHighlighted ? 'ring-2 ring-primary-green/70 border-primary-green/40 shadow-lg shadow-primary-green/5' : 'border-white/5'
-                  }`}
-                  id={`menuitem-${item.id}`}
-                >
-                  {/* Category illustrative icon badge in corner */}
-                  <div className="absolute top-3 left-3 z-10 bg-black/75 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1.5 shadow-sm">
-                    {getCategoryIcon(item.category)}
-                    <span className="text-[9px] uppercase tracking-wider text-gray-300 font-bold">{item.category}</span>
-                  </div>
-
-                  {/* Card visual header */}
-                  <div className="h-44 overflow-hidden relative">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                    
-                    {/* Click me eye hover */}
-                    <div 
-                      onClick={() => setSelectedItem(item)}
-                      className="absolute inset-0 bg-black/45 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
-                      data-hover="true"
-                    >
-                      <span className="px-3.5 py-1.5 bg-[#191919]/95 text-white text-xs font-semibold rounded-full border border-white/10 flex items-center gap-1.5">
-                        <Eye className="w-3.5 h-3.5 text-[#A7CCED]" />
-                        Inspect Recipe
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Card body */}
-                  <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                    <div>
-                      <h3 
-                        onClick={() => setSelectedItem(item)}
-                        className="font-serif text-base text-white font-medium cursor-pointer hover:text-primary-green transition-colors leading-snug line-clamp-1"
-                      >
-                        {item.name}
-                      </h3>
-                      
-                      <p className="mt-2 text-xs text-gray-400 leading-relaxed line-clamp-2 min-h-[2.5rem]">
-                        {item.description}
-                      </p>
-                    </div>
-
-                    <div className="pt-3 border-t border-white/5 flex items-center justify-between">
-                      <div className="flex flex-col">
-                        {isLoggedIn ? (
-                          <div className="flex items-baseline gap-1">
-                            <span className="text-sm font-bold text-[#689628]">£{discountPrice.toFixed(2)}</span>
-                            <span className="text-[10px] line-through text-gray-500">£{item.price.toFixed(2)}</span>
-                          </div>
-                        ) : (
-                          <span className="text-sm font-semibold text-[#A7CCED]">£{item.price.toFixed(2)}</span>
-                        )}
-                        <span className="text-[9px] text-gray-500 font-mono">ID: {item.id}</span>
-                      </div>
-
-                      <div className="flex items-center gap-1.5">
-                        <button
-                          onClick={() => setSelectedItem(item)}
-                          className="text-[11px] text-[#A7CCED] hover:text-white px-2 py-1.5 hover:bg-white/5 rounded-full transition-all cursor-pointer"
-                        >
-                          Recipe
-                        </button>
-                        <button
-                          onClick={() => handleAddWithFeedback(item)}
-                          className="px-3 py-1.5 bg-primary-green/20 text-primary-green hover:bg-primary-green hover:text-white rounded-full text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                          Add
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-
-            {filteredItems.length === 0 && (
-              <div className="col-span-full py-16 text-center opacity-80 bg-white/2 p-8 rounded-2xl border border-white/5">
-                <span className="text-2xl block mb-2">🍽️</span>
-                <h3 className="text-base font-serif text-white mb-1">No items found</h3>
-                <p className="text-xs text-gray-400 max-w-sm mx-auto">
-                  Try clearing your toppings filter or adjust search terms to find matching creations.
-                </p>
-                {activeHighlightTopping && (
-                  <button 
-                    onClick={() => setActiveHighlightTopping(null)}
-                    className="mt-4 px-4 py-1.5 bg-white/10 hover:bg-white/15 text-white rounded-full text-xs transition-colors"
-                  >
-                    Clear Toppings Filter
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
+          {categoryName === 'Salads' && (
+            <p className="text-xs md:text-sm italic text-[#2D2926]/80 font-serif mt-2 select-none">
+               Personalise Your Salad: Switch, add or remove ingredients
+            </p>
+          )}
+          {categoryName === 'Homemade' && (
+            <p className="text-xs md:text-sm italic text-[#2D2926]/80 font-serif mt-2 select-none">
+               Make it Large (Larger Portion Size) — +£2.00
+            </p>
+          )}
+          {categoryName === 'Wraps' && (
+            <p className="text-xs md:text-sm italic text-[#2D2926]/80 font-serif mt-2 select-none">
+               Make it Large (+£1.50) &bull; Personalise your fillings
+            </p>
+          )}
         </div>
 
-        {/* Right Column: Chalkboard Toppings Customizer Box (Bottom Right) */}
-        <div className="w-full lg:w-80 shrink-0 space-y-6 self-stretch lg:sticky lg:top-24">
-          
-          {/* 1. TOUGH ROBUST CHALKBOARD BOX FOR TOPPING SELECTIONS */}
-          <div className="bg-[#161d12] border-4 border-[#322316] rounded-2xl shadow-2xl p-5 relative overflow-hidden text-gray-100">
-            {/* Wooden frame outline look */}
-            <div className="absolute inset-0 border border-black/45 rounded-xl pointer-events-none" />
-            
-            <div className="space-y-4 relative z-10 font-sans">
-              
-              {/* Header */}
-              <div className="border-b border-[#689628]/20 pb-3">
-                <span className="text-[10px] tracking-widest text-[#A7CCED] font-bold uppercase block">Chalkboard Studio</span>
-                <h3 className="text-xl font-serif text-white flex items-center gap-2">
-                  Select Your Toppings
-                </h3>
-                <p className="text-[11px] text-gray-300 mt-1">
-                  Click any ingredient below to toggle and find items on the menu containing it, or scroll further to assemble your own plate!
-                </p>
-              </div>
+        {/* Items List */}
+        <div className="space-y-1 pt-1">
+          {items.map((item, index) => {
+            const hasOption = hasLargeOption(item.category);
+            const isCustomisable = isCustomisableCategory(item.category);
+            const specificDesc = ITEM_SPECIFIC_SUBTEXTS[item.name];
+            const finalPrice = isLoggedIn ? item.price * 0.9 : item.price;
 
-              {/* Toppings Chalk List */}
-              <div className="flex flex-wrap gap-2 pt-1">
-                {AVAILABLE_TOPPINGS.map((topping) => {
-                  const isHighlighted = activeHighlightTopping === topping.name;
-                  return (
-                    <button
-                      key={topping.name}
-                      onClick={() => {
-                        setActiveHighlightTopping(prev => prev === topping.name ? null : topping.name);
-                      }}
-                      className={`px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer border transition-all ${
-                        isHighlighted 
-                          ? 'bg-primary-green border-primary-green text-white font-bold shadow-md'
-                          : 'bg-[#1e2819] border-[#2d3a25] text-gray-300 hover:border-primary-green/40 hover:bg-[#25321f]'
-                      }`}
-                      title={`Filter menu by ${topping.name}`}
-                    >
-                      <span>{topping.icon}</span>
-                      <span>{topping.name}</span>
-                      <span className="text-[10px] text-gray-400 font-mono font-normal">
-                        +£{topping.price.toFixed(2)}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Reset Highlights Alert indicator */}
-              {activeHighlightTopping && (
-                <button
-                  onClick={() => setActiveHighlightTopping(null)}
-                  className="w-full text-center py-1 text-[10px] text-primary-green hover:underline flex items-center justify-center gap-1.5"
-                >
-                  <RefreshCw className="w-3 h-3" />
-                  Reset highlights filter
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* 2. CHALKBOARD CUSTOM SANDBOX (DESIGN YOUR OWN SNACK!) */}
-          <div className="bg-[#1c1c1c] border border-white/5 rounded-2xl p-5 shadow-xl space-y-4">
-            
-            <div className="border-b border-white/5 pb-3">
-              <span className="text-[9px] tracking-widest text-[#A7CCED] font-bold uppercase block">Personalisation Table</span>
-              <h4 className="text-base font-serif text-white">Assemble Custom Plate</h4>
-              <p className="text-xs text-gray-400">
-                Switch, add or remove ingredients. Build your own toast, wrap, salad, or jacket potato!
-              </p>
-            </div>
-
-            {/* Base Selector */}
-            <div className="space-y-1.5">
-              <label className="text-[10px] uppercase font-bold text-gray-400">Choose a Base</label>
-              <div className="grid grid-cols-2 gap-1.5">
-                {BASE_SNACKS.map((base, idx) => (
-                  <button
-                    key={base.name}
-                    onClick={() => {
-                      setSandboxBaseIndex(idx);
-                    }}
-                    className={`p-2 text-left rounded-lg border text-xs cursor-pointer transition-all ${
-                      sandboxBaseIndex === idx
-                        ? 'bg-[#191919] border-primary-green text-white font-semibold'
-                        : 'bg-white/2 border-transparent text-gray-400 hover:bg-white/5 hover:text-white'
-                    }`}
-                  >
-                    <span className="block text-[9px] text-[#A7CCED] uppercase font-mono">£{base.basePrice.toFixed(2)}</span>
-                    <span className="truncate block mt-0.5">{base.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Sandbox Toppings Checklist */}
-            <div className="space-y-2">
-              <label className="text-[10px] uppercase font-bold text-gray-400 block">Select Toppings</label>
-              <div className="max-h-48 overflow-y-auto pr-1 space-y-1 scrollbar-thin">
-                {AVAILABLE_TOPPINGS.map((top) => {
-                  const isChecked = sandboxToppings.includes(top.name);
-                  return (
-                    <div
-                      key={top.name}
-                      onClick={() => handleToggleSandboxTopping(top.name)}
-                      className="flex items-center justify-between p-2 rounded-lg bg-white/2 hover:bg-white/5 cursor-pointer transition-all border border-transparent hover:border-white/5 text-xs text-gray-300"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center ${
-                          isChecked ? 'bg-primary-green border-primary-green text-white' : 'border-gray-500'
-                        }`}>
-                          {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
-                        </div>
-                        <span>{top.icon} {top.name}</span>
-                      </div>
-                      <span className="font-mono text-gray-400 text-[11px]">+£{top.price.toFixed(2)}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Price block & Add action button */}
-            <div className="pt-3 border-t border-white/5 space-y-3">
-              <div className="flex justify-between items-baseline">
-                <span className="text-xs text-gray-450">Estimated Total:</span>
-                <div className="text-right">
-                  {isLoggedIn ? (
-                    <div className="flex flex-col items-end">
-                      <span className="text-lg font-bold text-[#689628]">£{sandboxDiscountPrice.toFixed(2)}</span>
-                      <span className="text-[9px] line-through text-gray-500">Regular: £{sandboxTotalPrice.toFixed(2)}</span>
-                    </div>
-                  ) : (
-                    <span className="text-base font-bold text-[#A7CCED]">£{sandboxTotalPrice.toFixed(2)}</span>
-                  )}
-                </div>
-              </div>
-
-              <button
-                onClick={handleAddCustomSandboxItem}
-                className="w-full py-2 bg-primary-green hover:bg-primary-green/95 text-white font-bold rounded-full text-xs transition-transform hover:scale-[1.01] active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-primary-green/10"
+            return (
+              <div 
+                key={item.id} 
+                onClick={() => {
+                  openCustomizeDrawer(item);
+                }}
+                className="group cursor-pointer rounded-none py-1.5 px-3 -mx-3 hover:bg-[#EFEAE2] border-b border-transparent hover:border-black/5 transition-all duration-200 text-left"
               >
-                <Plus className="w-4 h-4" />
-                Add Custom Biscuit to Basket
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Interactive Recipe Detail Modal */}
-      {selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-          {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-black/85 backdrop-blur-xs"
-            onClick={() => setSelectedItem(null)}
-          />
-
-          {/* Modal Container */}
-          <div className="bg-[#191919] border border-white/10 rounded-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl flex flex-col">
-            {/* Header image placeholder */}
-            <div className="h-56 w-full relative shrink-0">
-              <img 
-                src={selectedItem.image} 
-                alt={selectedItem.name}
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#191919] to-transparent" />
-              
-              <button 
-                onClick={() => setSelectedItem(null)}
-                className="absolute top-4 right-4 p-2 bg-black/60 hover:bg-black/90 text-white rounded-full border border-white/10 transition-all flex items-center justify-center"
-                aria-label="Close modal"
-              >
-                &times;
-              </button>
-
-              <div className="absolute bottom-4 left-4 right-4">
-                <span className="text-[10px] font-bold text-primary-green uppercase tracking-widest bg-[#191919]/90 px-2.5 py-1 border border-primary-green/20 rounded-full">{selectedItem.category}</span>
-                <h2 className="text-2xl font-serif text-white font-bold tracking-tight mt-2">{selectedItem.name}</h2>
-              </div>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-6 space-y-6 flex-1 overflow-y-auto">
-              <p className="text-xs md:text-sm text-gray-300 leading-relaxed font-light">
-                {selectedItem.description}
-              </p>
-
-              {/* Ingredients Cloud */}
-              <div className="space-y-2">
-                <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Harvested Sourced Ingredients</h4>
-                <div className="flex flex-wrap gap-1.5">
-                  {selectedItem.ingredients.map((ing, i) => (
-                    <span key={i} className="text-xs bg-white/5 border border-white/5 text-gray-300 py-1 px-2.5 rounded-md">
-                      {ing}
+                <div className="flex md:items-baseline justify-between gap-4">
+                  <div className="flex items-baseline gap-2 flex-1 min-w-0">
+                    {/* Item Listing Numbers */}
+                    <span className="font-mono text-xs md:text-sm text-black/50 font-bold shrink-0">
+                      {String(index + 1).padStart(2, '0')}
                     </span>
-                  ))}
+                    <h3 className="font-serif text-base md:text-[17px] font-extrabold text-[#2D2926] uppercase tracking-wide group-hover:underline transition-all break-words">
+                      {item.name}
+                    </h3>
+                  </div>
+                  
+                  {/* Price positioned rigidly to the right */}
+                  <div className="flex items-center gap-1.5 shrink-0 select-none">
+                    {isLoggedIn && (
+                      <span className="text-[11px] sm:text-xs line-through text-stone-400 font-serif">£{item.price.toFixed(2)}</span>
+                    )}
+                    <span className="font-serif text-base md:text-[17px] font-black text-[#2D2926]">
+                      £{finalPrice.toFixed(2)}
+                    </span>
+                    <ChevronRight className="h-4 w-4 text-black opacity-0 group-hover:opacity-100 transition-all translate-x-1 group-hover:translate-x-0" />
+                  </div>
                 </div>
-              </div>
 
-              {/* Allergens Warn */}
-              <div className="p-3.5 bg-yellow-400/5 border border-yellow-400/20 rounded-xl flex items-start gap-3">
-                <AlertTriangle className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-xs font-bold text-yellow-500 uppercase tracking-widest">Allergen Safety Callout</h4>
-                  <div className="text-xs text-gray-300 mt-1">
-                    {selectedItem.allergens.length > 0 ? (
-                      <span>This product contains: <strong className="text-white">{selectedItem.allergens.join(', ')}</strong>. Please speak with our barista regarding severe tolerances.</span>
-                    ) : (
-                      <span>Soothed clean! <strong className="text-white">Contains zero common allergens</strong>. Clean kitchen handling protocols are meticulously kept.</span>
+                {/* Left Offset details layer */}
+                <div className="pl-6 space-y-1 mt-0.5">
+                  {/* Specific subtext description */}
+                  {specificDesc && (
+                    <p className="text-xs md:text-sm text-[#2D2926]/90 font-serif italic leading-relaxed">
+                      {specificDesc}
+                    </p>
+                  )}
+
+                  {/* Config & Upgrades indicators in clean print text form */}
+                  <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                    {isCustomisable && (
+                      <span className="text-[10px] md:text-xs font-sans tracking-wide font-extrabold text-amber-900 uppercase select-none">
+                        CONFIGURE OPTION AVAILABLE
+                      </span>
+                    )}
+
+                    {hasOption && (
+                      <span className="text-[10px] md:text-xs font-mono tracking-wider font-bold text-[#2D2926]/80 border border-black/30 px-1 rounded-none uppercase bg-[#EFEAE2]/40 select-none">
+                        LARGE PORTION +£{item.category === 'Wraps' ? '1.50' : '2.00'}
+                      </span>
                     )}
                   </div>
                 </div>
               </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
-              {/* Nutritional Grid */}
-              <div className="space-y-2">
-                <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Nutritional Data</h4>
-                <div className="grid grid-cols-4 gap-2 text-center text-xs">
-                  <div className="p-2 bg-black/35 rounded-lg border border-white/5">
-                    <span className="text-gray-500 block text-[10px]">Calories</span>
-                    <span className="text-white font-bold">{selectedItem.nutritionalValue.calories} cal</span>
-                  </div>
-                  <div className="p-2 bg-black/35 rounded-lg border border-white/5">
-                    <span className="text-gray-500 block text-[10px]">Protein</span>
-                    <span className="text-white font-bold">{selectedItem.nutritionalValue.protein}</span>
-                  </div>
-                  <div className="p-2 bg-black/35 rounded-lg border border-white/5">
-                    <span className="text-gray-500 block text-[10px]">Carbohydrates</span>
-                    <span className="text-white font-bold">{selectedItem.nutritionalValue.carbs}</span>
-                  </div>
-                  <div className="p-2 bg-black/35 rounded-lg border border-white/5">
-                    <span className="text-gray-500 block text-[10px]">Healthy Fat</span>
-                    <span className="text-white font-bold">{selectedItem.nutritionalValue.fat}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="p-6 bg-black/40 border-t border-white/5 flex items-center justify-between shrink-0">
-              <div className="flex flex-col">
-                {isLoggedIn ? (
-                  <>
-                    <span className="text-sm line-through text-gray-500">£{selectedItem.price.toFixed(2)}</span>
-                    <span className="text-lg font-bold text-primary-green">£{(selectedItem.price * 0.9).toFixed(2)} <span className="text-[10px] text-[#A7CCED] tracking-wide ml-1 font-bold">10% OFF</span></span>
-                  </>
-                ) : (
-                  <span className="text-xl font-bold text-[#A7CCED]">£{selectedItem.price.toFixed(2)}</span>
-                )}
-                <span className="text-[10px] text-gray-400 font-mono">Recipe Lookup</span>
-              </div>
-
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setSelectedItem(null)}
-                  className="px-4 py-2 border border-white/10 hover:bg-white/5 text-gray-300 text-xs font-semibold rounded-full transition-all cursor-pointer"
-                >
-                  Close
-                </button>
-                <button
-                  onClick={() => {
-                    handleAddWithFeedback(selectedItem);
-                    setSelectedItem(null);
-                  }}
-                  className="px-6 py-2 bg-primary-green hover:bg-primary-green/95 text-white text-xs font-semibold rounded-full transition-all flex items-center gap-1.5 cursor-pointer"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add to basket
-                </button>
-              </div>
-            </div>
-          </div>
+  return (
+    <div 
+      className="w-full min-h-screen bg-[#F9F6F0] text-[#2D2926] py-12 px-4 sm:px-8 md:px-12 relative overflow-hidden"
+    >
+      <div className="max-w-7xl mx-auto">
+      
+      {/* Floating Add Feedback Toast Notification */}
+      {feedbackItemName && (
+        <div className="fixed bottom-6 left-6 z-50 bg-[#2D2926] border-2 border-black text-white text-xs py-3 px-5 rounded-none shadow-xl flex items-center gap-2 animate-fade-in font-serif">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <span>Added <strong className="text-white uppercase">{feedbackItemName}</strong> into your order basket</span>
         </div>
       )}
+
+      {/* Main Central Minimal Title (Double Border Line Design matching printed menu menu card aesthetic) */}
+      <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-16 select-none font-serif">
+        <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-[0.25em] text-[#2D2926] leading-tight mb-2">
+          THE BOTANICAL PANTRY
+        </h1>
+        <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.22em] text-[#2D2926] mt-2 uppercase font-bold select-none border-t border-b border-black/10 py-1.5 w-full max-w-2xl px-1">
+          15 VICTORIA ROAD, PENYFFORDD &nbsp;•&nbsp; TEL: 01244 50678 &nbsp;•&nbsp; W: WWW.THEBOTANICALPANTRY.CO.UK
+        </p>
+
+        <p className="text-xs sm:text-sm text-[#2D2926]/75 font-serif italic max-w-2xl mx-auto mt-4 leading-relaxed font-light">
+          Welcome to our interactive gourmet menu. Each item is prepared fresh. Click on any dish name to configure ingredients, size, toppings or leaves and add directly to your secure Shopify checkout cart.
+        </p>
+        
+        <div className="w-56 sm:w-80 md:w-[60%] h-[1.5px] bg-[#2D2926] mx-auto my-10 opacity-80" />
+      </div>
+
+      {/* Side-by-Side Dual-Column Newspaper Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+        
+        {/* Left Category Column */}
+        <div className="space-y-12">
+          {LEFT_CATEGORIES.map((catName) => renderCategory(catName))}
+        </div>
+
+        {/* Right Category Column */}
+        <div className="space-y-12">
+          {RIGHT_CATEGORIES.map((catName) => renderCategory(catName))}
+          
+          {/* TOAT / SANDWICH / SALAD TOPPINGS BOARD SYSTEM (Sits right beneath cakes box!) */}
+          <div className="rounded-none border-2 border-black bg-[#EFEAE2]/50 p-6 space-y-4 shadow-[3px_3px_0px_#2D2926] select-none">
+            <div className="flex items-center justify-between border-b border-black/20 pb-3">
+              <span className="text-xs font-sans uppercase tracking-widest text-[#2D2926] font-black flex items-center gap-1.5">
+                <Info className="h-3.5 w-3.5 text-[#2D2926]" />
+                Select Your Toppings
+              </span>
+              <span className="text-[9px] font-mono text-[#2D2926]/60 uppercase font-semibold">
+                Fresh Fillings Daily
+              </span>
+            </div>
+            
+            <p className="text-xs text-[#2D2926]/70 font-serif leading-relaxed">
+              These fresh ingredients are available to switch daily, customize or add as satisfying fillings inside any of our customizable <strong>Toasts & Toasties</strong>, <strong>Sandwiches</strong>, <strong>Wraps</strong>, <strong>Salads</strong>, and hot <strong>Jacket Potatoes</strong>:
+            </p>
+
+            <div className="flex flex-wrap gap-2 pt-2">
+              {['Tuna', 'Ham', 'Onions', 'Tomato', 'Avocado', 'Sweetcorn', 'Cucumber', 'Baked Beans', 'Cheese'].map((toppingName) => {
+                const isHighlighted = activeHighlightTopping === toppingName;
+                return (
+                  <button
+                    key={toppingName}
+                    onClick={() => {
+                      setActiveHighlightTopping((prev) => (prev === toppingName ? null : toppingName));
+                    }}
+                    className={`rounded-none bg-[#F9F6F0] border px-3 py-1.5 text-xs font-serif font-bold text-[#2D2926] shadow-[1px_1px_0px_rgba(0,0,0,0.1)] transition-colors duration-150 cursor-pointer select-none ${
+                      isHighlighted
+                        ? 'bg-[#2D2926] border-black text-white'
+                        : 'border-black/20 hover:bg-[#EFEAE2]'
+                    }`}
+                  >
+                    {toppingName}
+                  </button>
+                );
+              })}
+            </div>
+
+            {activeHighlightTopping && (
+              <button
+                onClick={() => setActiveHighlightTopping(null)}
+                className="text-[10px] font-mono font-bold tracking-wider text-amber-900 uppercase hover:underline flex items-center gap-1 cursor-pointer select-none"
+              >
+                &times; Clear filter highlighting
+              </button>
+            )}
+          </div>
+        </div>
+
+      </div>
+
+      {/* Styled double border lines footer matching the screenshot structure */}
+      <div className="border-t border-stone-300 mt-16 pt-6 flex flex-col md:flex-row justify-between items-center text-[10px] font-serif tracking-wider text-stone-600 gap-4">
+        <span>© 2026 The Botanical Pantry. All rights reserved.</span>
+        <span className="flex items-center gap-1 mb-1 md:mb-0">
+          <Clock className="w-3.5 h-3.5 text-[#689628]" />
+          Opening Hours: 8:00 AM - 10:00 PM Daily
+        </span>
+        <span className="uppercase tracking-widest font-black text-stone-850 flex items-center gap-1">
+          <Check className="w-3.5 h-3.5 text-[#689628]" />
+          Direct Collection & Order Fulfilled
+        </span>
+      </div>
+
+      </div> {/* End max-w-7xl */}
+
+      {/* Interactive Right-Side Customizer Drawer */}
+      <AnimatePresence>
+        {selectedItem && (
+          <div className="fixed inset-0 z-50 overflow-hidden font-sans">
+            {/* Dark glass overlay with fade-in */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedItem(null)}
+              className="absolute inset-0 bg-stone-950/60 backdrop-blur-xs cursor-pointer animate-fade-in"
+            />
+
+            {/* Slide-out Panel container */}
+            <div className="absolute inset-y-0 right-0 max-w-full flex">
+              <motion.div 
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="w-screen max-w-[500px] bg-[#F5F2EB] border-l border-stone-300 flex flex-col shadow-2xl relative select-none"
+              >
+                {/* Header Section */}
+                <div className="p-6 border-b border-stone-300 bg-[#EFECE5] shrink-0">
+                  <div className="flex justify-between items-start gap-4">
+                    <div>
+                      <span className="text-[10px] font-mono font-black uppercase tracking-[0.25em] text-[#8e7651]">
+                        {selectedItem.category}
+                      </span>
+                      <h2 className="font-serif text-2xl font-black uppercase tracking-wider text-stone-900 mt-1">
+                        {selectedItem.name}
+                      </h2>
+                    </div>
+                    {/* Square outline Close Button */}
+                    <button 
+                      onClick={() => setSelectedItem(null)}
+                      className="border border-stone-800 p-2 text-stone-900 select-none flex items-center justify-center w-8 h-8 rounded-none hover:bg-stone-200 transition-colors cursor-pointer"
+                      aria-label="Close panel"
+                    >
+                      <X className="w-5 h-5 stroke-[2.5]" />
+                    </button>
+                  </div>
+                  {/* Subtle dividing line */}
+                  <div className="border-b border-stone-400 mt-4" />
+                </div>
+
+                {/* Content Section (Scrollable) */}
+                <div className="flex-1 overflow-y-auto p-6 space-y-7">
+                  
+                  {/* 1. Switch / Remove Ingredients (Only if customizable) */}
+                  {isCustomisableCategory(selectedItem.category) && (
+                    <div className="space-y-3">
+                      <div className="border-b border-stone-300 pb-1.5">
+                        <h4 className="font-sans text-xs sm:text-sm font-black tracking-wider uppercase text-stone-900">
+                          SWITCH / REMOVE INGREDIENTS
+                        </h4>
+                      </div>
+                      <p className="text-[11px] italic text-stone-500">
+                        Hold off on specific ingredients inside this dish:
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        {getSwitchableIngredients(selectedItem).map((ingredient) => {
+                          const isExcluded = excludedIngredients.includes(ingredient);
+                          return (
+                            <button
+                              key={ingredient}
+                              onClick={() => {
+                                setExcludedIngredients((prev) => 
+                                  prev.includes(ingredient)
+                                    ? prev.filter((i) => i !== ingredient)
+                                    : [...prev, ingredient]
+                                );
+                              }}
+                              className={`border px-3.5 py-1.5 text-xs font-serif font-bold uppercase transition-all tracking-wider cursor-pointer rounded-none select-none ${
+                                isExcluded
+                                  ? 'border-red-350 text-stone-400 bg-stone-200/50 line-through opacity-65'
+                                  : 'border-stone-400 bg-white text-stone-900 hover:bg-stone-100'
+                              }`}
+                            >
+                              {ingredient}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 2. Add Premium Toppings (+£0.80 per topping) (Only if customizable) */}
+                  {isCustomisableCategory(selectedItem.category) && (
+                    <div className="space-y-3">
+                      <div className="border-b border-stone-300 pb-1.5">
+                        <h4 className="font-sans text-xs sm:text-sm font-black tracking-wider uppercase text-stone-900">
+                          ADD PREMIUM TOPPINGS
+                        </h4>
+                      </div>
+                      <p className="text-[11px] italic text-stone-500">
+                        Enhance your meal (+£0.80 per topping)
+                      </p>
+                      
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        {AVAILABLE_TOPPINGS.map((topping) => {
+                          const isSelected = premiumToppings.includes(topping.name);
+                          return (
+                            <button
+                              key={topping.name}
+                              onClick={() => {
+                                setPremiumToppings((prev) => 
+                                  prev.includes(topping.name)
+                                    ? prev.filter((t) => t !== topping.name)
+                                    : [...prev, topping.name]
+                                );
+                              }}
+                              className={`border p-3 flex items-center justify-between text-[11px] font-sans font-bold uppercase tracking-wider cursor-pointer select-none transition-all rounded-none ${
+                                isSelected
+                                  ? 'border-[#689628] bg-[#689628]/5 text-stone-900 shadow-xs animate-shake'
+                                  : 'border-stone-300 bg-white text-stone-700 hover:bg-stone-50'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2">
+                                <div className={`w-3.5 h-3.5 border flex items-center justify-center rounded-none transition-all ${
+                                  isSelected ? 'bg-[#689628] border-transparent text-[#FCFAF5]' : 'border-stone-400 bg-white'
+                                }`}>
+                                  {isSelected && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                                </div>
+                                <span>{topping.name}</span>
+                              </div>
+                              <span className="font-mono text-[10px] text-[#8e7651]">+£0.80</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 3. Kitchen Instructions Special Box */}
+                  <div className="space-y-3">
+                    <div className="border-b border-stone-300 pb-1.5">
+                      <h4 className="font-sans text-xs sm:text-sm font-black tracking-wider uppercase text-stone-900">
+                        KITCHEN INSTRUCTIONS
+                      </h4>
+                    </div>
+                    <textarea
+                      placeholder="Any allergy requests, special cooking guidance or dietary adjustments..."
+                      value={drawerNotes}
+                      onChange={(e) => setDrawerNotes(e.target.value)}
+                      className="border border-stone-400 bg-white p-3 text-xs sm:text-sm font-serif outline-none w-full h-24 placeholder-stone-400 text-stone-900 focus:border-stone-800 transition-colors rounded-none"
+                    />
+                  </div>
+
+                </div>
+
+                {/* Bottom Fixed Section */}
+                <div className="p-6 border-t border-stone-300 bg-[#EFECE5] shrink-0 space-y-4">
+                  
+                  {/* Quantity selector row */}
+                  <div className="flex items-center justify-between">
+                    <span className="font-sans text-xs sm:text-sm font-black tracking-wider uppercase text-stone-900">
+                      SELECT QUANTITY
+                    </span>
+                    
+                    {/* Incremental Selector Box */}
+                    <div className="border border-stone-400 flex items-center bg-white">
+                      <button
+                        onClick={() => setDrawerQuantity(q => Math.max(1, q - 1))}
+                        className="p-2 w-10 text-center font-bold font-mono hover:bg-stone-150 transition-colors border-r border-stone-400 text-stone-800"
+                      >
+                        -
+                      </button>
+                      <span className="w-10 text-center font-serif text-sm font-extrabold text-stone-900">
+                        {drawerQuantity}
+                      </span>
+                      <button
+                        onClick={() => setDrawerQuantity(q => q + 1)}
+                        className="p-2 w-10 text-center font-bold font-mono hover:bg-stone-150 transition-colors border-l border-stone-400 text-stone-800"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Divider line */}
+                  <div className="border-b border-stone-300" />
+
+                  {/* Price & Add To Basket Shopify CTA */}
+                  <div className="flex items-center justify-between pt-1">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] uppercase text-stone-500 font-extrabold tracking-widest font-sans">
+                        TOTAL (INC VAT)
+                      </span>
+                      <div className="flex items-baseline gap-1.5 mt-0.5">
+                        <span className="text-xl sm:text-2xl font-serif font-black text-stone-900">
+                          £{((selectedItem.price + (premiumToppings.length * 0.80)) * (isLoggedIn ? 0.9 : 1.0) * drawerQuantity).toFixed(2)}
+                        </span>
+                        {isLoggedIn && (
+                          <span className="text-[9px] text-[#689628] font-sans font-black uppercase tracking-wider">
+                            (-10% MEM)
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={handleAddCustomizedDrawerItem}
+                      className="bg-stone-900 text-[#F5F2EB] py-4 px-6 uppercase font-bold text-xs tracking-widest hover:bg-black transition-colors rounded-none flex items-center gap-2 shadow-md active:translate-y-0.5 select-none shrink-0"
+                    >
+                      <Plus className="w-4 h-4 text-[#A7CCED]" />
+                      ADD TO SHOPIFY CART
+                    </button>
+                  </div>
+
+                </div>
+
+              </motion.div>
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

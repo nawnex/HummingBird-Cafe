@@ -107,7 +107,11 @@ export default function App() {
       <div className="ambient-glow bottom-20 right-10 w-[550px] h-[550px] bg-[#A7CCED]/10" />
 
       {/* 2. Global Header */}
-      <header className="sticky top-0 z-40 bg-[#191919]/90 backdrop-blur-md border-b border-[#689628]/15 shadow-md">
+      <header className={`z-40 transition-all duration-300 ${
+        currentView === 'home'
+          ? 'absolute top-0 left-0 w-full bg-transparent border-b border-transparent shadow-none'
+          : 'sticky top-0 bg-[#191919]/90 backdrop-blur-md border-b border-[#689628]/15 shadow-md'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           
           {/* Cafe Title & Branding */}
@@ -221,7 +225,11 @@ export default function App() {
       )}
 
       {/* 4. Main Atmospheric Body */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-10 z-10">
+      <main className={`flex-1 w-full mx-auto z-10 ${
+        (currentView === 'home' || currentView === 'menu')
+          ? ''
+          : 'max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 md:pt-10'
+      }`}>
         
         {/* Animated view transitions based on currentView state */}
         <div className="transition-opacity duration-300">
@@ -229,6 +237,7 @@ export default function App() {
             <HomeView 
               onNavigate={(page) => setCurrentView(page)} 
               onAddToCart={handleAddToCart}
+              isLoggedIn={isLoggedIn}
             />
           )}
 
@@ -236,6 +245,8 @@ export default function App() {
             <MenuView 
               onAddToCart={handleAddToCart}
               isLoggedIn={isLoggedIn}
+              onOpenCart={() => setIsCartOpen(true)}
+              cart={cart}
             />
           )}
 

@@ -153,6 +153,11 @@ export default function CartDrawer({
                           </button>
                         </div>
                         <p className="text-xs text-gray-400 capitalize mb-2">{item.menuItem.category}</p>
+                        {item.selectedDetails && (
+                          <div className="text-[10px] text-[#A7CCED] tracking-wide font-mono bg-white/5 py-1 px-2 rounded border border-[#A7CCED]/10 mb-2 leading-relaxed">
+                            {item.selectedDetails}
+                          </div>
+                        )}
                         
                         <div className="flex justify-between items-center">
                           {/* Price */}

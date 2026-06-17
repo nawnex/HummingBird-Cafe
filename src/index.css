@@ -66,4 +66,178 @@ body {
   cursor: pointer;
 }
 
+/* 3D perspective and utility elements */
+.perspective-1500 {
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+
+@keyframes liquid-glow-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.liquid-glass-border {
+  background: linear-gradient(135deg, rgba(167, 204, 237, 0.25), rgba(104, 150, 40, 0.25), rgba(167, 204, 237, 0.25));
+  background-size: 200% 200%;
+  animation: liquid-glow-move 8s ease infinite;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.liquid-glass-border-intense {
+  background: linear-gradient(135deg, rgba(167, 204, 237, 0.45) 0%, rgba(104, 150, 40, 0.45) 50%, rgba(167, 204, 237, 0.45) 100%);
+  background-size: 200% 200%;
+  animation: liquid-glow-move 6s ease infinite;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+
+/* Ghibli inspired Starry Sky Animations */
+@keyframes ghibli-twinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.ghibli-star {
+  animation: ghibli-twinkle 4s infinite ease-in-out;
+}
+
+@keyframes ghibli-shooting-star {
+  0% {
+    transform: translate(0, 0) rotate(-35deg) scale(0);
+    opacity: 0;
+  }
+  1% {
+    opacity: 0.9;
+    transform: translate(0, 0) rotate(-35deg) scale(1);
+  }
+  8% {
+    transform: translate(-180px, 126px) rotate(-35deg) scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-180px, 126px) rotate(-35deg) scale(0);
+    opacity: 0;
+  }
+}
+
+.shooting-star-slow {
+  animation: ghibli-shooting-star 9s infinite linear;
+}
+
+.shooting-star-medium {
+  animation: ghibli-shooting-star 7s infinite linear;
+}
+
+.shooting-star-fast {
+  animation: ghibli-shooting-star 5s infinite linear;
+}
+
+@keyframes ghibli-sway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(1.5deg);
+  }
+}
+
+.ghibli-sway {
+  animation: ghibli-sway 6s infinite ease-in-out;
+  transform-origin: bottom center;
+}
+
+/* Beautiful slow Ghibli circular/elliptical cloud drifting animations */
+@keyframes ghibli-cloud-drift-1 {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  25% {
+    transform: translate(30px, -15px) scale(1.02);
+  }
+  50% {
+    transform: translate(15px, -25px) scale(1.04);
+  }
+  75% {
+    transform: translate(-20px, -10px) scale(1.01);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes ghibli-cloud-drift-2 {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  25% {
+    transform: translate(-35px, -10px) scale(0.98);
+  }
+  50% {
+    transform: translate(-15px, -22px) scale(1.02);
+  }
+  75% {
+    transform: translate(25px, -8px) scale(1);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes ghibli-cloud-drift-3 {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  25% {
+    transform: translate(25px, 15px) scale(1.03);
+  }
+  50% {
+    transform: translate(-10px, 25px) scale(0.97);
+  }
+  75% {
+    transform: translate(-30px, 10px) scale(1.01);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.ghibli-cloud-1 {
+  animation: ghibli-cloud-drift-1 26s infinite ease-in-out;
+}
+
+.ghibli-cloud-2 {
+  animation: ghibli-cloud-drift-2 32s infinite ease-in-out;
+}
+
+.ghibli-cloud-3 {
+  animation: ghibli-cloud-drift-3 22s infinite ease-in-out;
+}
+
+
+
+
 
