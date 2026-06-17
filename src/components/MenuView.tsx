@@ -86,6 +86,21 @@ export default function MenuView({ onAddToCart, isLoggedIn, onOpenCart, cart }: 
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [feedbackItemName, setFeedbackItemName] = useState<string | null>(null);
   const [activeHighlightTopping, setActiveHighlightTopping] = useState<string | null>(null);
+  const [highlightedCategory, setHighlightedCategory] = useState<string | null>(null);
+
+  const handleScrollToCategory = (catName: string) => {
+    const id = `cat-section-${catName.toLowerCase().replace(/\s+/g, '-')}`;
+    const element = document.getElementById(id);
+    if (element) {
+      // Smooth scroll so the section is placed roughly in the center of the viewport
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setHighlightedCategory(catName);
+      // Briefly highlight for 1.5 seconds
+      setTimeout(() => {
+        setHighlightedCategory(null);
+      }, 1500);
+    }
+  };
   
   // Custom Toppings Drawer States
   const [drawerQuantity, setDrawerQuantity] = useState<number>(1);
@@ -235,10 +250,16 @@ export default function MenuView({ onAddToCart, isLoggedIn, onOpenCart, cart }: 
     const items = getCategoryFilteredItems(categoryName);
     if (items.length === 0 && searchQuery !== '') return null;
 
+    const isHighlighted = highlightedCategory === categoryName;
+
     return (
       <div 
         key={categoryName} 
-        className="flex flex-col pb-6"
+        className={`flex flex-col pb-6 transition-all duration-750 rounded-none p-4 -m-4 border border-transparent ${
+          isHighlighted 
+            ? 'shadow-[0_20px_50px_rgba(45,41,38,0.14)] border-[#2D2926]/10 bg-white/10 backdrop-blur-xs scale-[1.015]' 
+            : 'bg-transparent'
+        }`}
         id={`cat-section-${categoryName.toLowerCase().replace(/\s+/g, '-')}`}
       >
         {/* Vintage Framed Header exactly as in original menu picture */}
@@ -355,11 +376,11 @@ export default function MenuView({ onAddToCart, isLoggedIn, onOpenCart, cart }: 
 
       {/* Main Central Minimal Title (Double Border Line Design matching printed menu menu card aesthetic) */}
       <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-16 select-none font-serif">
-        <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-[0.25em] text-[#2D2926] leading-tight mb-2">
-          THE BOTANICAL PANTRY
+        <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-wide text-[#2D2926] leading-tight mb-2">
+          HummingBird Cafe
         </h1>
         <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.22em] text-[#2D2926] mt-2 uppercase font-bold select-none border-t border-b border-black/10 py-1.5 w-full max-w-2xl px-1">
-          15 VICTORIA ROAD, PENYFFORDD &nbsp;•&nbsp; TEL: 01244 50678 &nbsp;•&nbsp; W: WWW.THEBOTANICALPANTRY.CO.UK
+          Unit 2.0.13 &amp; 2.0.14, Eurotowers, Block 2, Europort Road, Gibraltar &nbsp;•&nbsp; TEL: +350 200 70000 &nbsp;•&nbsp; W: WWW.HUMMINGBIRD.GI
         </p>
 
         <p className="text-xs sm:text-sm text-[#2D2926]/75 font-serif italic max-w-2xl mx-auto mt-4 leading-relaxed font-light">
@@ -367,6 +388,25 @@ export default function MenuView({ onAddToCart, isLoggedIn, onOpenCart, cart }: 
         </p>
         
         <div className="w-56 sm:w-80 md:w-[60%] h-[1.5px] bg-[#2D2926] mx-auto my-10 opacity-80" />
+      </div>
+
+      {/* Elegant Jump-To Category Navigation List */}
+      <div className="max-w-4xl mx-auto mb-16 select-none text-center">
+        <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.22em] text-[#2D2926]/70 uppercase font-bold mb-4">
+          Jump to Section
+        </p>
+        <div className="flex flex-wrap justify-center gap-x-2.5 gap-y-2 sm:gap-x-3 max-w-3xl mx-auto">
+          {[...LEFT_CATEGORIES, ...RIGHT_CATEGORIES].map((catName) => (
+            <button
+              key={catName}
+              type="button"
+              onClick={() => handleScrollToCategory(catName)}
+              className="font-serif text-xs tracking-wider text-[#2D2926]/85 hover:text-black hover:bg-[#EFEAE2] border border-[#2D2926]/25 hover:border-[#2D2926] py-1.5 px-3.5 transition-all cursor-pointer rounded-none uppercase font-bold bg-[#FBF9F4] shadow-[1px_1px_0px_rgba(0,0,0,0.1)] hover:shadow-none"
+            >
+              {catName}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Side-by-Side Dual-Column Newspaper Layout */}
@@ -380,60 +420,13 @@ export default function MenuView({ onAddToCart, isLoggedIn, onOpenCart, cart }: 
         {/* Right Category Column */}
         <div className="space-y-12">
           {RIGHT_CATEGORIES.map((catName) => renderCategory(catName))}
-          
-          {/* TOAT / SANDWICH / SALAD TOPPINGS BOARD SYSTEM (Sits right beneath cakes box!) */}
-          <div className="rounded-none border-2 border-black bg-[#EFEAE2]/50 p-6 space-y-4 shadow-[3px_3px_0px_#2D2926] select-none">
-            <div className="flex items-center justify-between border-b border-black/20 pb-3">
-              <span className="text-xs font-sans uppercase tracking-widest text-[#2D2926] font-black flex items-center gap-1.5">
-                <Info className="h-3.5 w-3.5 text-[#2D2926]" />
-                Select Your Toppings
-              </span>
-              <span className="text-[9px] font-mono text-[#2D2926]/60 uppercase font-semibold">
-                Fresh Fillings Daily
-              </span>
-            </div>
-            
-            <p className="text-xs text-[#2D2926]/70 font-serif leading-relaxed">
-              These fresh ingredients are available to switch daily, customize or add as satisfying fillings inside any of our customizable <strong>Toasts & Toasties</strong>, <strong>Sandwiches</strong>, <strong>Wraps</strong>, <strong>Salads</strong>, and hot <strong>Jacket Potatoes</strong>:
-            </p>
-
-            <div className="flex flex-wrap gap-2 pt-2">
-              {['Tuna', 'Ham', 'Onions', 'Tomato', 'Avocado', 'Sweetcorn', 'Cucumber', 'Baked Beans', 'Cheese'].map((toppingName) => {
-                const isHighlighted = activeHighlightTopping === toppingName;
-                return (
-                  <button
-                    key={toppingName}
-                    onClick={() => {
-                      setActiveHighlightTopping((prev) => (prev === toppingName ? null : toppingName));
-                    }}
-                    className={`rounded-none bg-[#F9F6F0] border px-3 py-1.5 text-xs font-serif font-bold text-[#2D2926] shadow-[1px_1px_0px_rgba(0,0,0,0.1)] transition-colors duration-150 cursor-pointer select-none ${
-                      isHighlighted
-                        ? 'bg-[#2D2926] border-black text-white'
-                        : 'border-black/20 hover:bg-[#EFEAE2]'
-                    }`}
-                  >
-                    {toppingName}
-                  </button>
-                );
-              })}
-            </div>
-
-            {activeHighlightTopping && (
-              <button
-                onClick={() => setActiveHighlightTopping(null)}
-                className="text-[10px] font-mono font-bold tracking-wider text-amber-900 uppercase hover:underline flex items-center gap-1 cursor-pointer select-none"
-              >
-                &times; Clear filter highlighting
-              </button>
-            )}
-          </div>
         </div>
 
       </div>
 
       {/* Styled double border lines footer matching the screenshot structure */}
       <div className="border-t border-stone-300 mt-16 pt-6 flex flex-col md:flex-row justify-between items-center text-[10px] font-serif tracking-wider text-stone-600 gap-4">
-        <span>© 2026 The Botanical Pantry. All rights reserved.</span>
+        <span>© 2026 HummingBird Cafe. All rights reserved.</span>
         <span className="flex items-center gap-1 mb-1 md:mb-0">
           <Clock className="w-3.5 h-3.5 text-[#689628]" />
           Opening Hours: 8:00 AM - 10:00 PM Daily
@@ -534,16 +527,16 @@ export default function MenuView({ onAddToCart, isLoggedIn, onOpenCart, cart }: 
                     </div>
                   )}
 
-                  {/* 2. Add Premium Toppings (+£0.80 per topping) (Only if customizable) */}
-                  {isCustomisableCategory(selectedItem.category) && (
+                  {/* 2. Add Premium Toppings (+£0.80 per topping) (Only if Jacket Potato) */}
+                  {selectedItem.category === 'Jacket Potato' && (
                     <div className="space-y-3">
                       <div className="border-b border-stone-300 pb-1.5">
                         <h4 className="font-sans text-xs sm:text-sm font-black tracking-wider uppercase text-stone-900">
-                          ADD PREMIUM TOPPINGS
+                          SELECT YOUR POTATO TOPPINGS
                         </h4>
                       </div>
                       <p className="text-[11px] italic text-stone-500">
-                        Enhance your meal (+£0.80 per topping)
+                        Customize your baked jacket potato with these satisfying ingredients (+£0.80 per topping):
                       </p>
                       
                       <div className="grid grid-cols-2 gap-2 pt-1">
@@ -561,13 +554,13 @@ export default function MenuView({ onAddToCart, isLoggedIn, onOpenCart, cart }: 
                               }}
                               className={`border p-3 flex items-center justify-between text-[11px] font-sans font-bold uppercase tracking-wider cursor-pointer select-none transition-all rounded-none ${
                                 isSelected
-                                  ? 'border-[#689628] bg-[#689628]/5 text-stone-900 shadow-xs animate-shake'
+                                  ? 'border-stone-800 bg-stone-100 text-stone-900 shadow-xs'
                                   : 'border-stone-300 bg-white text-stone-700 hover:bg-stone-50'
                               }`}
                             >
                               <div className="flex items-center gap-2">
                                 <div className={`w-3.5 h-3.5 border flex items-center justify-center rounded-none transition-all ${
-                                  isSelected ? 'bg-[#689628] border-transparent text-[#FCFAF5]' : 'border-stone-400 bg-white'
+                                  isSelected ? 'bg-stone-900 border-transparent text-white' : 'border-stone-400 bg-white'
                                 }`}>
                                   {isSelected && <Check className="w-2.5 h-2.5 stroke-[3]" />}
                                 </div>
