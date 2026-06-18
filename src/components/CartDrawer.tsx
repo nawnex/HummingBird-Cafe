@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CartItem } from '../types';
 import { X, Plus, Minus, ShoppingBag, CreditCard, Sparkles, AlertCircle } from 'lucide-react';
 
@@ -10,6 +10,7 @@ interface CartDrawerProps {
   onRemoveItem: (itemId: string) => void;
   isLoggedIn: boolean;
   onClearCart: () => void;
+  onNavigate?: (view: string) => void;
 }
 
 export default function CartDrawer({
@@ -19,10 +20,22 @@ export default function CartDrawer({
   onUpdateQuantity,
   onRemoveItem,
   isLoggedIn,
-  onClearCart
+  onClearCart,
+  onNavigate
 }: CartDrawerProps) {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'shopify-snippet'>('cart');
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -67,9 +80,9 @@ export default function CartDrawer({
           <div className="p-6 border-b border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ShoppingBag className="w-5 h-5 text-primary-green" />
-              <h2 className="text-xl font-serif text-white font-medium">Your Harvest Basket</h2>
-              <span className="bg-primary-green/20 text-[#A7CCED] text-xs font-medium px-2 py-0.5 rounded-full border border-primary-green/30">
-                {totalItems} {totalItems === 1 ? 'item' : 'items'}
+              <h2 className="text-xl font-serif text-white font-medium">Your Cart</h2>
+              <span className="text-white text-xs font-medium pl-1">
+                ({totalItems} {totalItems === 1 ? 'item' : 'items'})
               </span>
             </div>
             <button 
@@ -93,22 +106,36 @@ export default function CartDrawer({
                   Sip on fresh blends or organic bites! Wander over to our Menu page to gather some forest treasures.
                 </p>
                 <button
-                  onClick={onClose}
+                  onClick={() => {
+                    if (onNavigate) {
+                      onNavigate('menu');
+                    } else {
+                      onClose();
+                    }
+                  }}
                   className="mt-6 px-6 py-2 bg-primary-green hover:bg-primary-green/90 text-white rounded-full text-sm font-semibold transition-all hover:scale-105 shadow-lg cursor-pointer"
                 >
                   Explore Menu
                 </button>
               </div>
             ) : checkoutStep === 'cart' ? (
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {/* Simulated login discount banner for non-members */}
                 {!isLoggedIn && (
-                  <div className="p-4 bg-primary-green/10 border border-[#689628]/30 rounded-xl flex items-start gap-3">
-                    <Sparkles className="w-5 h-5 text-[#A7CCED] shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="text-xs font-bold text-white uppercase tracking-wider">Member Bonus Waiting</h4>
-                      <p className="text-xs text-gray-300 mt-1">
-                        Hummingbird members unlock <span className="text-[#A7CCED] font-semibold">10% Off Everything</span> automatically. Log in via the account icon to apply discount!
+                  <div className="p-2.5 bg-primary-green/10 border border-[#689628]/35 rounded-xl flex items-start gap-2 max-w-full">
+                    <Sparkles className="w-4 h-4 text-[#A7CCED] shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-gray-300 leading-normal">
+                        Hummingbird members unlock 10% off discount automatically.{' '}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (onNavigate) onNavigate('members');
+                          }}
+                          className="text-[#A7CCED] hover:text-white hover:underline cursor-pointer font-bold inline"
+                        >
+                          Join Now
+                        </button>
                       </p>
                     </div>
                   </div>
@@ -128,38 +155,73 @@ export default function CartDrawer({
                 )}
 
                 {/* Items List */}
-                <div className="space-y-4">
+                <div className="space-y-1 divide-y divide-white/5">
                   {cart.map((item) => (
                     <div 
                       key={item.menuItem.id}
-                      className="p-3 bg-white/5 border border-white/5 rounded-xl flex gap-3 hover:border-primary-green/20 transition-all duration-300"
+                      className="py-3 flex flex-col gap-2 transition-all duration-300 hover:bg-white/[0.01]"
                     >
-                      <img 
-                        src={item.menuItem.image} 
-                        alt={item.menuItem.name}
-                        className="w-16 h-16 object-cover rounded-lg border border-white/5"
-                        referrerPolicy="no-referrer"
-                      />
                       <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-start">
-                          <h4 className="text-sm font-serif text-white font-medium truncate pr-2">
-                            {item.menuItem.name}
-                          </h4>
+                        <div className="flex justify-between items-start gap-2">
+                          <div>
+                            <h4 className="text-sm font-sans text-white font-medium pr-1">
+                              {item.menuItem.name}
+                            </h4>
+                            <p className="text-[9px] text-gray-500 uppercase tracking-widest font-sans mt-0.5">{item.menuItem.category}</p>
+                          </div>
+                          
                           <button
                             onClick={() => onRemoveItem(item.menuItem.id)}
-                            className="text-xs text-gray-500 hover:text-red-400 p-0.5 transition-colors"
+                            className="text-xs text-gray-500 hover:text-red-400 p-0.5 transition-colors cursor-pointer shrink-0"
                           >
                             Remove
                           </button>
                         </div>
-                        <p className="text-xs text-gray-400 capitalize mb-2">{item.menuItem.category}</p>
-                        {item.selectedDetails && (
-                          <div className="text-[10px] text-[#A7CCED] tracking-wide font-mono bg-white/5 py-1 px-2 rounded border border-[#A7CCED]/10 mb-2 leading-relaxed">
-                            {item.selectedDetails}
+                        
+                        {/* Display Detailed Customizations - no black background box, clean side border design */}
+                        {(item.excludedIngredients || item.menuItem.excludedIngredients || 
+                          item.premiumToppings || item.menuItem.premiumToppings || 
+                          item.kitchenNotes || item.menuItem.kitchenNotes || 
+                          item.selectedDetails || item.menuItem.selectedDetails) && (
+                          <div className="my-1.5 font-sans space-y-1 text-left border-l border-primary-green/20 pl-2">
+                            {(item.excludedIngredients || item.menuItem.excludedIngredients) && (
+                              <div className="flex items-baseline gap-1 text-[11px]">
+                                <span className="font-bold text-red-400/90 shrink-0 text-[10px] tracking-wider uppercase">WITHOUT:</span>
+                                <span className="text-gray-300 font-mono text-[10px]">
+                                  {(item.excludedIngredients || item.menuItem.excludedIngredients || []).join(', ')}
+                                </span>
+                              </div>
+                            )}
+                            
+                            {(item.premiumToppings || item.menuItem.premiumToppings) && (
+                              <div className="flex items-baseline gap-1 text-[11px]">
+                                <span className="font-bold text-[#76A8D6] shrink-0 text-[10px] tracking-wider uppercase">ADD:</span>
+                                <span className="text-gray-300 font-mono text-[10px]">
+                                  {(item.premiumToppings || item.menuItem.premiumToppings || []).join(', ')}
+                                </span>
+                              </div>
+                            )}
+
+                            {(item.kitchenNotes || item.menuItem.kitchenNotes) && (
+                              <div className="text-[11px] text-stone-400 italic leading-relaxed">
+                                <span className="font-sans not-italic text-[10px] text-amber-500/95 uppercase mr-1 font-bold tracking-wider">NOTE:</span>
+                                "{(item.kitchenNotes || item.menuItem.kitchenNotes || '')}"
+                              </div>
+                            )}
+
+                            {/* Fallback compact layout if structural keys are missing */}
+                            {!(item.excludedIngredients || item.menuItem.excludedIngredients) && 
+                             !(item.premiumToppings || item.menuItem.premiumToppings) && 
+                             !(item.kitchenNotes || item.menuItem.kitchenNotes) && 
+                             (item.selectedDetails || item.menuItem.selectedDetails) && (
+                              <div className="text-[10px] text-stone-400 tracking-wide font-mono leading-relaxed italic">
+                                {item.selectedDetails || item.menuItem.selectedDetails}
+                              </div>
+                            )}
                           </div>
                         )}
                         
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center mt-2.5">
                           {/* Price */}
                           <div className="flex items-center gap-1.5">
                             {isLoggedIn ? (
@@ -257,10 +319,6 @@ const client = ShopifyBuy.buildClient({
               {checkoutStep === 'cart' ? (
                 <>
                   <div className="space-y-2">
-                    <div className="flex justify-between text-sm text-gray-400">
-                      <span>Harvest Subtotal</span>
-                      <span>£{subtotal.toFixed(2)}</span>
-                    </div>
                     {isLoggedIn && (
                       <div className="flex justify-between text-sm text-[#A7CCED]">
                         <span className="flex items-center gap-1.5">
@@ -270,11 +328,7 @@ const client = ShopifyBuy.buildClient({
                         <span>-£{discountAmount.toFixed(2)}</span>
                       </div>
                     )}
-                    <div className="flex justify-between text-sm text-gray-400">
-                      <span>Container Deposit</span>
-                      <span className="text-[#A7CCED]">FREE</span>
-                    </div>
-                    <div className="border-t border-white/5 my-2 pt-2 flex justify-between text-base font-medium text-white">
+                    <div className="flex justify-between text-base font-medium text-white">
                       <span>Total Price</span>
                       <span className="text-primary-green font-bold">£{finalTotal.toFixed(2)}</span>
                     </div>
@@ -303,11 +357,6 @@ const client = ShopifyBuy.buildClient({
                   Confirm Simulation
                 </button>
               )}
-              
-              <div className="flex items-center justify-center gap-1 text-[10px] text-gray-400">
-                <AlertCircle className="w-3 h-3 text-[#A7CCED]" />
-                <span>Local Sourcing & Clean Ingredients Guaranteed</span>
-              </div>
             </div>
           )}
         </div>

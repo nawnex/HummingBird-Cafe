@@ -14,6 +14,10 @@ export interface MenuItem {
   };
   image: string;
   isWeeklyHighlight?: boolean;
+  selectedDetails?: string;
+  excludedIngredients?: string[];
+  premiumToppings?: string[];
+  kitchenNotes?: string;
 }
 
 export interface CafeEvent {
@@ -31,6 +35,9 @@ export interface CartItem {
   menuItem: MenuItem;
   quantity: number;
   selectedDetails?: string;
+  excludedIngredients?: string[];
+  premiumToppings?: string[];
+  kitchenNotes?: string;
 }
 
 export interface MemberProfile {

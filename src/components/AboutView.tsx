@@ -1,145 +1,103 @@
 import React from 'react';
-import { Heart, Leaf, Shield } from 'lucide-react';
+import { Heart, Leaf, Shield, Coffee, Users, Zap } from 'lucide-react';
 
 export default function AboutView() {
   const values = [
     {
-      icon: <Leaf className="w-5 h-5 text-primary-green" />,
-      title: 'Ethical Supply Chains',
-      desc: 'Our coffee and organic teas are ethically sourced, supporting independent farming communities.'
+      icon: <Leaf className="w-6 h-6 text-primary-green" />,
+      title: 'Quality & Care',
+      desc: 'Every dish is crafted with premium ingredients and genuine passion for exceptional food.'
     },
     {
-      icon: <Heart className="w-5 h-5 text-primary-green" />,
-      title: 'Grassroots Community',
-      desc: 'We donate 15% of net proceeds to neighborhood community programs.'
+      icon: <Users className="w-6 h-6 text-primary-green" />,
+      title: 'Community',
+      desc: 'We believe in the power of connection and creating spaces where relationships flourish.'
     },
     {
-      icon: <Shield className="w-5 h-5 text-primary-green" />,
-      title: 'Community Commitment',
-      desc: 'All food waste is composted and distributed to community gardeners absolutely free.'
+      icon: <Zap className="w-6 h-6 text-primary-green" />,
+      title: 'Creativity',
+      desc: 'Innovation and imagination are at the heart of everything we do, from menu to atmosphere.'
     },
-  ];
-
-  const milestones = [
-    {
-      year: 'Spring 2024',
-      title: 'The Seed is Planted',
-      desc: 'Founders transform a forgotten industrial warehouse into a thriving local gathering spot.'
-    },
-    {
-      year: 'Autumn 2024',
-      title: 'The Roots Take Hold',
-      desc: 'Local neighbors gather to map out a warm community hub and safe social place.'
-    },
-    {
-      year: 'Summer 2025',
-      title: 'The Greenhouse Bloom',
-      desc: 'Hummingbird officially opens, serving sustainable meals and launching clean transport options.'
-    },
-    {
-      year: '2026 & Beyond',
-      title: 'The Majestic Canopy',
-      desc: 'Serving neighborhood meals and coffee at the heart of our vibrant community hub.'
-    }
   ];
 
   return (
-    <div className="space-y-16 font-sans pb-20">
-      {/* Page Header */}
-      <div className="text-center md:text-left space-y-3">
-        <span className="text-xs font-bold text-primary-green uppercase tracking-widest block">Our Root Story</span>
-        <h1 className="text-3xl md:text-5xl font-serif text-white tracking-tight">
-          The Hummingbird <span className="text-[#A7CCED] italic">Gathering Idea</span>
+    <div className="space-y-20 font-sans pb-20 text-gray-100">
+      
+      {/* 1. Hero Section */}
+      <section className="text-center space-y-4 pt-10">
+        <span className="text-[10px] font-bold text-primary-green uppercase tracking-[0.2em] block">About Us</span>
+        <h1 className="text-4xl md:text-6xl font-serif font-black tracking-tight text-white leading-tight">
+          Where creativity meets <span className="text-primary-green italic font-light">community</span>
         </h1>
-        <p className="text-sm text-gray-400 max-w-2xl">
-          An urban greenhouse designed to cultivate change, connection, and great flavors.
+        <p className="text-lg text-gray-400 font-light max-w-2xl mx-auto italic">
+          "The Hummingbird Cafe is unique in its own little way and proudly so."
         </p>
-      </div>
+      </section>
 
-      {/* Story Column Grids */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-        
-        {/* Story Text (7/12 width) */}
-        <div className="lg:col-span-7 space-y-6">
-          <h2 className="text-2xl font-serif text-white">Cultivating Change, One Savor at a Time</h2>
-          <p className="text-gray-300 text-sm leading-relaxed font-light">
-            Hummingbird began as a daring experiment. In early 2024, our founders transformed a forgotten industrial warehouse into a flourishing urban rainforest. We engineered a water-recycling indoor biome to bring our community closer to nature.
+      {/* 2. Story Section */}
+      <section className="max-w-4xl mx-auto space-y-12">
+        <div className="space-y-6 text-gray-300 font-light leading-relaxed">
+          <h2 className="text-2xl font-serif text-white font-bold">A Humbling Little Hummingbird Story</h2>
+          <p>
+            From the moment you walk through our doors, our goal is simple: to create the perfect space for you. Whether you’re craving a quiet corner to unwind, a friendly face to chat with, something sweet, a hearty homemade meal, or a refreshing smoothie, we’re here for it all.
           </p>
-          <p className="text-gray-300 text-sm leading-relaxed font-light">
-            Every cup features premium shade-grown coffee sourced directly from independent farmers. We ensure fair wages while supporting wild forest conservation with every purchase.
+          <p>
+            Hummingbird was originally created in 2023 with a bold dream. On February 5th 2024, that dream entered a new chapter as we reopened our doors, keeping the original spirit true to its home.
           </p>
-          <div className="p-4 bg-primary-green/5 border-l-4 border-primary-green rounded-r-xl">
-            <p className="text-xs italic text-gray-300 leading-relaxed">
-              &ldquo;We match the cooperative biodiversity of a real rainforest canopy in everything we cultivate.&rdquo;
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 bg-[#191919] p-8 rounded-3xl border border-white/5">
+          <div className="space-y-4">
+            <h3 className="font-serif text-xl text-white font-bold">Why People Visit</h3>
+            <p className="text-sm text-gray-400 font-light leading-relaxed">
+              Our food, snacks, smoothies, friendly service, adaptability, and that unmistakable feeling of belonging. We pride ourselves on our “think outside the box” approach.
             </p>
-            <span className="text-[10px] font-bold text-[#A7CCED] block mt-1.5 uppercase tracking-wider">— Marcus Ortiz, Co-Founder</span>
+          </div>
+          <div className="space-y-4">
+            <h3 className="font-serif text-xl text-white font-bold">A Hub for Dreamers</h3>
+            <p className="text-sm text-gray-400 font-light leading-relaxed">
+              More than just a café, it’s a hub for dreamers, innovators, writers, artists, and entrepreneurs. Where conversations flow, ideas take shape, and every visit holds potential for connection.
+            </p>
           </div>
         </div>
+      </section>
 
-        {/* Decorative Sourcing Banner (5/12 width) */}
-        <div className="lg:col-span-5 relative">
-          <img 
-            src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&q=80&w=600" 
-            alt="Rainforest plants inside Hummingbird Cafe"
-            className="w-full h-[320px] object-cover rounded-2xl border border-white/5 shadow-xl"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-2xl" />
-          
-          <div className="absolute bottom-6 left-6 right-6 p-4 bg-[#191919]/90 border border-primary-green/20 rounded-xl">
-            <span className="text-[10px] font-bold text-primary-green uppercase tracking-wider">Sustainable Honor Roll</span>
-            <h4 className="text-sm font-serif text-white font-medium mt-1">100% Responsibly Sourced</h4>
-            <p className="text-[11px] text-gray-400 mt-1">From environmentally conscious packaging to ethically sourced tea, we prioritize quality.</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Sowing Values */}
-      <section className="space-y-6 bg-white/5 border border-white/5 p-8 rounded-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-primary-green/5 rounded-full blur-[100px] pointer-events-none" />
-        
-        <div className="text-center max-w-xl mx-auto space-y-2">
-          <span className="text-[10px] font-bold text-primary-green uppercase tracking-wider block">Our Core Pillars</span>
-          <h2 className="text-2xl font-serif text-white">How We Tend Our Forest</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+      {/* 3. Core Pillars */}
+      <section className="bg-white/5 border border-white/5 p-12 rounded-3xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {values.map((v, i) => (
-            <div key={i} className="space-y-2">
-              <div className="p-3 bg-primary-green/10 border border-primary-green/20 rounded-xl w-fit">
+            <div key={i} className="space-y-4">
+              <div className="p-4 bg-primary-green/10 border border-primary-green/20 rounded-2xl w-fit">
                 {v.icon}
               </div>
-              <h4 className="font-serif text-sm font-semibold text-white">{v.title}</h4>
-              <p className="text-xs text-gray-400 leading-relaxed font-light">{v.desc}</p>
+              <h4 className="font-serif text-lg font-bold text-white">{v.title}</h4>
+              <p className="text-sm text-gray-400 leading-relaxed font-light">{v.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Milestones Timeline */}
-      <section className="space-y-8">
-        <div className="text-center md:text-left">
-          <span className="text-xs font-bold text-primary-green uppercase tracking-wide block mb-1">Our Growth History</span>
-          <h2 className="text-2xl font-serif text-white">The Hummingbird Milestone Journey</h2>
-        </div>
+      {/* 4. Service Ethos */}
+      <section className="max-w-3xl mx-auto text-center space-y-6">
+        <h2 className="text-2xl font-serif text-white font-bold">Our Service Promise</h2>
+        <p className="text-sm text-gray-300 font-light leading-relaxed">
+          At The Hummingbird Cafe, service isn’t just a duty — it’s our passion, our promise, and our purpose. We are intentional in what we do, aiming to resolve, create, and produce experiences that feel genuine. Every interaction is guided by warmth, authenticity, and real care.
+        </p>
+      </section>
 
-        <div className="relative border-l border-white/10 ml-4 md:ml-6 space-y-8">
-          {milestones.map((m, i) => (
-            <div key={i} className="relative pl-6 md:pl-8 group">
-              {/* Timeline outer dot indicator */}
-              <div className="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-[#121212] border-2 border-primary-green group-hover:bg-[#A7CCED] transition-all flex items-center justify-center">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary-green" />
-              </div>
-              
-              <div className="space-y-1 p-4 bg-white/3 border border-white/5 rounded-xl group-hover:border-[#689628]/20 transition-all duration-300">
-                <span className="text-[10px] font-bold text-[#A7CCED] uppercase tracking-wider">{m.year}</span>
-                <h4 className="text-sm font-serif font-semibold text-white group-hover:text-primary-green transition-colors">{m.title}</h4>
-                <p className="text-xs text-gray-400 leading-relaxed font-light pt-1">{m.desc}</p>
-              </div>
-            </div>
-          ))}
+      {/* 5. Team Section */}
+      <section className="bg-[#191919] p-10 rounded-3xl border border-white/5 flex flex-col md:flex-row gap-8 items-center">
+        <div className="flex-1 space-y-4">
+          <h2 className="text-2xl font-serif text-white font-bold">Our Team</h2>
+          <p className="text-sm text-gray-300 font-light leading-relaxed">
+            Behind every great cup of coffee and delicious meal is a dedicated team. Our baristas, chefs, and staff are committed to making your experience memorable. We're not just serving food and drinks—we're building relationships and fostering a community where everyone feels at home.
+          </p>
+        </div>
+        <div className="shrink-0">
+          <Users className="w-16 h-16 text-primary-green/50" />
         </div>
       </section>
+
     </div>
   );
 }

@@ -29,8 +29,8 @@ export default function App() {
     { key: 'menu', label: 'Menu' },
     { key: 'events', label: 'Events' },
     { key: 'members', label: 'Members' },
-    { key: 'about', label: 'About' },
-    { key: 'contact', label: 'Contact' }
+    { key: 'contact', label: 'Contact' },
+    { key: 'about', label: 'About' }
   ];
 
   // Members registration flow
@@ -62,7 +62,14 @@ export default function App() {
         };
         return updated;
       }
-      return [...prevCart, { menuItem, quantity: 1 }];
+      return [...prevCart, { 
+        menuItem, 
+        quantity: 1,
+        selectedDetails: menuItem.selectedDetails,
+        excludedIngredients: menuItem.excludedIngredients,
+        premiumToppings: menuItem.premiumToppings,
+        kitchenNotes: menuItem.kitchenNotes
+      }];
     });
   };
 
@@ -107,11 +114,7 @@ export default function App() {
       <div className="ambient-glow bottom-20 right-10 w-[550px] h-[550px] bg-[#A7CCED]/10" />
 
       {/* 2. Global Header */}
-      <header className={`z-40 transition-all duration-300 ${
-        currentView === 'home'
-          ? 'absolute top-0 left-0 w-full bg-transparent border-b border-transparent shadow-none'
-          : 'sticky top-0 bg-[#191919]/90 backdrop-blur-md border-b border-[#689628]/15 shadow-md'
-      }`}>
+      <header className="sticky top-0 z-40 bg-[#191919]/90 backdrop-blur-md border-b border-[#689628]/15 shadow-md transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           
           {/* Cafe Title & Branding */}
@@ -282,6 +285,11 @@ export default function App() {
         onRemoveItem={handleRemoveCartItem}
         isLoggedIn={isLoggedIn}
         onClearCart={handleClearCart}
+        onNavigate={(view) => {
+          setCurrentView(view);
+          setIsCartOpen(false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
       />
 
       {/* 6. Footer section */}

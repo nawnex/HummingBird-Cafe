@@ -259,7 +259,7 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
       )}
 
       {/* =========================================================================
-          1. IMMERSIVE HERO SECTION WITH FRUIT SMOOTHIES BACKGROUND
+          1. IMMERSIVE HERO SECTION WITH ABSTRACT BOTANICAL DESIGN
           ========================================================================= */}
       <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden pt-36 pb-28 border-b border-white/5 bg-[#0a0a0a] shadow-2xl min-h-[620px] flex flex-col justify-center z-10 transition-all duration-300 text-center">
         
@@ -270,6 +270,11 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
           className="absolute inset-0 w-full h-full object-cover opacity-65 pointer-events-none"
           referrerPolicy="no-referrer"
         />
+
+        {/* Deep ambient forest glows in margins */}
+        <div className="absolute inset-0 bg-[#060805]/40" />
+        <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-primary-green/10 rounded-full blur-[150px] pointer-events-none animate-pulse" />
+        <div className="absolute -bottom-40 -right-40 w-[600px] h-[600px] bg-[#A7CCED]/5 rounded-full blur-[150px] pointer-events-none" />
 
         {/* Dynamic deep glass ambient dark overlays for perfect text contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/60 to-[#121212] z-0 pointer-events-none" />
@@ -439,7 +444,10 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
                           <h3 className="font-serif text-base font-extrabold text-slate-100 tracking-tight line-clamp-1">
                             {item.name}
                           </h3>
-                          <p className="text-xs text-slate-400 font-light leading-relaxed line-clamp-3">
+                          <p className="text-[10px] text-primary-green uppercase tracking-widest font-bold">
+                            {item.category} • Freshly Prepared
+                          </p>
+                          <p className="text-xs text-slate-400 font-light leading-relaxed line-clamp-2">
                             {item.description}
                           </p>
                         </div>
@@ -487,18 +495,23 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { title: 'Fresh Salads', desc: 'Crisp greens and vibrant vegetables', img: saladImage },
-            { title: 'Artisan Wraps', desc: 'Crisp greens and vibrant vegetables', img: wrapImage },
-            { title: 'Smoothies', desc: 'Crisp greens and vibrant vegetables', img: smoothieImage },
-            { title: 'Premium Coffees', desc: 'Crisp greens and vibrant vegetables', img: coffeeImage },
-            { title: 'Gourmet Toasts', desc: 'Crisp greens and vibrant vegetables', img: toastImage },
-            { title: 'Teas & infusions', desc: 'Crisp greens and vibrant vegetables', img: teaImage },
+            { title: 'Fresh Salads', desc: 'Crisp greens, organic ingredients, and bright dressings', image: saladImage },
+            { title: 'Artisan Wraps', desc: 'Savoury house-rolled premium grains with gourmet fillings', image: wrapImage },
+            { title: 'Smoothies', desc: 'Vibrant direct-press fruits & superfood botanicals', image: smoothieImage },
+            { title: 'Premium Coffees', desc: 'Ethically sourced, masterfully roasted shade-grown espresso', image: coffeeImage },
+            { title: 'Gourmet Toasts', desc: 'Thick cut artisanal sourdough with rich plant spreads', image: toastImage },
+            { title: 'Teas & infusions', desc: 'Hand-picked organic loose leaf blends and herbal tonics', image: teaImage },
           ].map((item, i) => (
-            <div key={i} className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden hover:border-primary-green/30 transition-all">
-              <img src={item.img} alt={item.title} className="w-full h-40 object-cover" />
-              <div className="p-6">
-                <h3 className="text-xl text-white font-serif mb-2">{item.title}</h3>
-                <p className="text-gray-400 text-sm">{item.desc}</p>
+            <div key={i} className="bg-[#121212]/90 border border-white/5 rounded-2xl overflow-hidden flex flex-col hover:border-primary-green/35 transition-all duration-300 relative group min-h-[300px]">
+              <div className="h-40 w-full overflow-hidden">
+                <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div className="p-6 flex flex-col justify-between flex-1 relative z-10">
+                <div className="space-y-2">
+                  <Leaf className="w-5 h-5 text-primary-green group-hover:text-primary-green transition-colors shrink-0" />
+                  <h3 className="text-lg text-white font-serif font-extrabold uppercase tracking-wide leading-snug">{item.title}</h3>
+                  <p className="text-gray-400 text-xs leading-relaxed font-light">{item.desc}</p>
+                </div>
               </div>
             </div>
           ))}
@@ -538,6 +551,16 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
               {TESTIMONIALS[activeTestimonial].role}
             </span>
           </div>
+
+          {/* Added Google Reviews Link */}
+          <a
+            href="https://www.google.com/search?q=Hummingbird+Café+Reviews+gibraltar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-4 text-xs font-bold text-primary-green uppercase tracking-widest hover:underline"
+          >
+            Read Our Google Reviews
+          </a>
 
           <div className="flex justify-center gap-3 pt-4">
             {TESTIMONIALS.map((_, idx) => (
@@ -579,13 +602,13 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
               
               <button 
                 onClick={() => setSelectedItem(null)}
-                className="absolute top-4 right-4 p-2 bg-black/60 hover:bg-black/90 text-white rounded-full border border-white/10 transition-all flex items-center justify-center font-bold text-lg leading-none cursor-pointer"
+                className="absolute top-4 right-4 p-2 bg-black/60 hover:bg-black/90 text-white rounded-full border border-[#191919]/40 transition-all flex items-center justify-center font-bold text-lg leading-none cursor-pointer z-20"
                 aria-label="Close modal"
               >
                 &times;
               </button>
 
-              <div className="absolute bottom-4 left-4 right-4">
+              <div className="absolute bottom-4 left-4 right-4 z-10">
                 <span className="text-[10px] font-bold text-primary-green uppercase tracking-widest bg-[#191919]/90 px-2.5 py-1 border border-primary-green/20 rounded-full">{selectedItem.category}</span>
                 <h2 className="text-2xl font-serif text-white font-bold tracking-tight mt-2">{selectedItem.name}</h2>
               </div>
