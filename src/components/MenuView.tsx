@@ -285,10 +285,14 @@ export default function MenuView({ onAddToCart, isLoggedIn, onOpenCart, cart }: 
         }`}
         id={`cat-section-${categoryName.toLowerCase().replace(/\s+/g, '-')}`}
       >
-        {/* Vintage Framed Header exactly as in original menu picture */}
+        {/* Vintage Framed Header with elegant decorative lines on each side */}
         <div className="text-center mb-5">
-          <div className="border border-black px-8 py-3 tracking-widest text-[#2D2926] font-bold font-serif inline-block mx-auto bg-[#F3ECE0]/80 shadow-[2px_2px_0px_#2D2926] text-sm md:text-base uppercase rounded-none select-none">
-            {categoryName}
+          <div className="flex items-center justify-center gap-3 md:gap-5 mb-2">
+            <span className="border-b-2 border-[#C2B29F] border-solid w-6 sm:w-12 md:w-16 shrink-0" />
+            <div className="border border-black px-6 sm:px-8 py-3 tracking-widest text-[#2D2926] font-bold font-serif bg-[#F3ECE0]/80 shadow-[2px_2px_0px_#2D2926] text-xs sm:text-sm md:text-base uppercase rounded-none select-none shrink-0">
+              {categoryName}
+            </div>
+            <span className="border-b-2 border-[#C2B29F] border-solid w-6 sm:w-12 md:w-16 shrink-0" />
           </div>
           {categoryName === 'Toasts & Toasties' && (
             <p className="text-xs md:text-sm italic text-[#2D2926]/80 font-serif mt-2 select-none">
@@ -396,38 +400,38 @@ export default function MenuView({ onAddToCart, isLoggedIn, onOpenCart, cart }: 
       )}
 
       {/* 1. Dark #171717 Welcome Section */}
-      <div className="sticky top-0 z-50 w-full bg-[#171717] text-[#F9F6F0] py-4 px-4 sm:px-8 md:px-12 border-b-2 border-black/30 text-center select-none font-serif relative">
+      <div className="sticky top-0 z-50 w-full bg-[#171717] text-[#F9F6F0] py-2 px-4 sm:px-8 md:py-3 border-b-2 border-black/30 text-center select-none font-serif relative">
         <div className="absolute inset-0 bg-radial-gradient from-white/3 via-transparent to-transparent pointer-events-none" />
         
         <div className="max-w-4xl mx-auto flex flex-col items-center">
-          <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-widest text-[#F9F6F0] leading-tight mb-1 animate-fade-in">
+          <h1 className="font-serif text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-widest text-[#F9F6F0] leading-tight mb-0.5 animate-fade-in">
             HummingBird Cafe
           </h1>
-          <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.22em] text-gray-450 mt-1 uppercase font-bold select-none border-t border-b border-white/10 py-1 w-full max-w-2xl px-1">
-            Unit 2.0.13 &amp; 2.0.14, Eurotowers, Block 2, Europort Road, Gibraltar &nbsp;•&nbsp; TEL: +350 200 70000 &nbsp;•&nbsp; W: WWW.HUMMINGBIRD.GI
-          </p>
+          <div className="text-[9px] sm:text-[10px] font-sans tracking-[0.2em] text-gray-400 uppercase font-bold select-none border-t border-b border-white/10 py-1 w-full max-w-xl px-1 flex flex-col gap-0.5 items-center justify-center">
+            <span>Unit 2.0.13 &amp; 2.0.14, Eurotowers, Block 2, Europort Road, Gibraltar &bull; +350 200 68132</span>
+          </div>
 
-          <p className="text-xs sm:text-sm text-[#F9F6F0]/85 font-serif italic max-w-2xl mx-auto mt-1.5 leading-relaxed font-light">
+          <p className="text-[11px] sm:text-xs text-[#F9F6F0]/85 font-serif italic max-w-2xl mx-auto mt-1 leading-relaxed font-light">
             Welcome to our interactive gourmet menu. Each item is prepared fresh. Click on any dish to configure
           </p>
         </div>
       </div>
 
       {/* 2. Classic Cream Normal Menu Section */}
-      <div className="max-w-7xl mx-auto py-4 px-4 sm:px-8 md:px-12">
+      <div className="max-w-7xl mx-auto py-2 px-4 sm:px-8 md:px-12">
         {/* Menu Section Title & Category Jump List separated by '-' */}
-        <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-4 select-none font-serif">
-          <h2 className="font-serif text-2xl sm:text-3xl font-extrabold uppercase tracking-widest text-[#2D2926] border-b-2 border-[#2D2926]/40 pb-1.5 inline-block">
+        <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-2 select-none font-serif">
+          <h2 className="font-serif text-xl sm:text-2xl font-extrabold uppercase tracking-widest text-[#2D2926] border-b-2 border-[#2D2926]/40 pb-1 inline-block">
             Menu
           </h2>
           
-          <div className="mt-3 max-w-3xl mx-auto flex flex-wrap justify-center items-center gap-y-1.5 text-xs sm:text-sm font-serif font-black uppercase tracking-wider text-[#2D2926]/80 leading-relaxed">
+          <div className="mt-2 max-w-3xl mx-auto flex flex-wrap justify-center items-center gap-y-1 text-xs font-serif font-black uppercase tracking-wider text-[#2D2926]/80 leading-relaxed">
             {[...LEFT_CATEGORIES, ...RIGHT_CATEGORIES].map((catName, index, arr) => (
               <span key={catName} className="inline-flex items-center">
                 <button
                   type="button"
                   onClick={() => handleScrollToCategory(catName)}
-                  className="hover:text-[#689628] hover:underline cursor-pointer select-none transition-all px-1.5 py-0.5"
+                  className="hover:text-[#689628] hover:underline cursor-pointer select-none transition-all px-1 py-0.5"
                 >
                   {catName}
                 </button>
@@ -438,7 +442,7 @@ export default function MenuView({ onAddToCart, isLoggedIn, onOpenCart, cart }: 
             ))}
           </div>
           
-          <div className="w-56 sm:w-80 md:w-[60%] h-[1px] bg-[#2D2926]/15 mx-auto my-4" />
+          <div className="w-56 sm:w-80 md:w-[60%] h-[1px] bg-[#2D2926]/15 mx-auto mt-2 mb-4" />
         </div>
 
         {/* Side-by-Side Dual-Column Newspaper Layout */}

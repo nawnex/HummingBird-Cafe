@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MenuItem, CartItem, MemberProfile } from './types';
 
 // Component Views
@@ -22,6 +22,11 @@ export default function App() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+
+  // Reset scroll to top on any view/page change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentView]);
 
   // Nav pages mapping
   const navLinks = [
@@ -191,11 +196,11 @@ export default function App() {
             <button
               onClick={() => setIsCartOpen(true)}
               className="p-2 text-gray-300 hover:text-white transition-all flex items-center justify-center relative cursor-pointer"
-              title="View your harvest basket"
+              title="View your cart"
             >
               <ShoppingBag className="w-5 h-5" />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#A7CCED] text-[#191919] text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#191919] animate-pulse">
+                <span className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#191919] animate-pulse">
                   {cartItemsCount}
                 </span>
               )}
@@ -293,21 +298,18 @@ export default function App() {
       />
 
       {/* 6. Footer section */}
-      <footer className="bg-[#191919] border-t border-[#689628]/15 py-12 px-4 sm:px-6 lg:px-8 mt-auto z-10 text-xs">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+      <footer className="bg-[#191919] border-t border-[#689628]/15 py-6 px-4 sm:px-6 lg:px-8 mt-auto z-10 text-xs">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           
           {/* Logo Brand Brand info Column */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
+          <div className="space-y-0">
+            <div className="flex items-center gap-2 mb-2">
               <Leaf className="w-4 h-4 text-primary-green" />
               <span className="font-serif text-lg font-bold text-white tracking-tight">Hummingbird</span>
             </div>
-            <p className="text-gray-400 leading-relaxed font-light">
+            <p className="text-gray-400 leading-relaxed font-light m-0 p-0">
               Designing living green retreats filled with premium botanical tea elixirs, sustainable bites, and neighborhood community initiatives.
             </p>
-            <div className="text-[10px] text-gray-500 font-mono tracking-tighter">
-              {/* Placeholder */}
-            </div>
           </div>
 
           {/* Quick links */}
@@ -323,46 +325,41 @@ export default function App() {
                     }}
                     className="hover:text-primary-green transition-colors text-left"
                   >
-                    {link.label} Page
+                    {link.label}
                   </button>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Sourcing credentials */}
-          <div className="space-y-3">
-            <h4 className="font-serif text-white font-medium">Sourcing Ethics</h4>
-            <ul className="space-y-2 text-gray-400 font-light">
-              <li>100% Organic, Pesticide-Free</li>
-              <li>Shade-Grown Arabicas</li>
-              <li>Sustaining Forest Cooperatives</li>
-              <li>Reusable Container Program</li>
-            </ul>
-          </div>
-
           {/* Quick Hours / Contact summary */}
           <div className="space-y-3">
-            <h4 className="font-serif text-white font-medium">The Greenhouse Location</h4>
+            <h4 className="font-serif text-white font-medium">Hummingbird Cafe</h4>
             <p className="text-gray-400 leading-relaxed font-light">
-              Unit 2.0.13 & 2.0.14, Eurotowers, Block 2, Europort Road, Gibraltar, GX111AA<br />
-              +350 200 70000
+              Unit 2.0.13 &amp; 2.0.14, Eurotowers, Block 2, Europort Road, Gibraltar, GX11 1AA<br />
+              T: <a href="tel:+35020068132" className="hover:text-primary-green transition-colors">+350 200 68132</a><br />
+              E: <a href="mailto:hello@thehummingbirdcafegib.com" className="hover:text-primary-green transition-colors text-[11px] font-mono">hello@thehummingbirdcafegib.com</a>
             </p>
-            <div className="pt-1.5 flex items-center gap-1.5 text-[#A7CCED]">
-              <Clock className="w-3.5 h-3.5 text-primary-green" />
-              <span>Weekdays: 7 AM - 7 PM</span>
+            <div className="space-y-1.5 text-gray-400 font-light leading-snug">
+              <div className="flex items-center gap-1.5 text-white font-medium mb-1">
+                <Clock className="w-3.5 h-3.5 text-primary-green" />
+                <span>Opening Hours</span>
+              </div>
+              <div className="text-[11px]">Mon &ndash; Fri: 8:00 AM &ndash; 4:00 PM</div>
+              <div className="text-[11px]">Saturday: 9:00 AM &ndash; 4:00 PM</div>
+              <div className="text-[11px]">Sunday: Closed</div>
             </div>
           </div>
 
         </div>
 
-        <div className="max-w-7xl mx-auto border-t border-white/5 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-gray-500 text-[10px]">
+        <div className="max-w-7xl mx-auto border-t border-white/5 mt-2.5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-gray-500 text-[10px]">
           <div>
             &copy; {new Date().getFullYear()} Hummingbird Cafe LLC. All rights harvested ethically.
           </div>
           <div className="flex gap-4">
-            <a href="#privacy" className="hover:text-white transition-colors">Safety Regulations</a>
-            <a href="#terms" className="hover:text-white transition-colors">Sourcing Terms</a>
+            <a href="#privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="#terms" className="hover:text-white transition-colors">Terms &amp; Conditions</a>
             <a href="#cookies" className="hover:text-white transition-colors">Cookie Policy</a>
           </div>
         </div>

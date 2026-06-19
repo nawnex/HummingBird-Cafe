@@ -1,4 +1,5 @@
 import { MenuItem, CafeEvent, Testimonial } from './types';
+import avocadoPoachedEggImage from './assets/images/avocado_poached_egg_1781872898791.jpg';
 
 export const MENU_ITEMS: MenuItem[] = [
   // --- TOASTS & TOASTIES ---
@@ -44,7 +45,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ['Sourdough Bread', 'Roasted Red Peppers', 'Cheddar Blend', 'Mozzarella', 'Sweet Basil'],
     allergens: ['Gluten', 'Dairy'],
     nutritionalValue: { calories: 385, protein: '15g', carbs: '36g', fat: '14g' },
-    image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: 'tst-005',
@@ -55,7 +56,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ['Multi-grain Toast', 'Sautéed Spinach', 'Fresh Chopped Garlic', 'Swiss Cheese', 'Cheddar Cheese'],
     allergens: ['Gluten', 'Dairy'],
     nutritionalValue: { calories: 365, protein: '14g', carbs: '30g', fat: '15g' },
-    image: 'https://images.unsplash.com/photo-1541532713592-79a0317b6b77?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1538220856186-0be0c085984d?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: 'tst-006',
@@ -66,7 +67,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ['Thick Cut Sourdough', 'Avocado Mash', 'Poached Egg', 'Chili Flakes', 'Maldon Salt'],
     allergens: ['Gluten', 'Eggs'],
     nutritionalValue: { calories: 395, protein: '14g', carbs: '28g', fat: '19g' },
-    image: 'https://images.unsplash.com/photo-1541532713592-79a0317b6b77?auto=format&fit=crop&q=80&w=800',
+    image: avocadoPoachedEggImage,
     isWeeklyHighlight: true
   },
 
@@ -745,56 +746,63 @@ export const MENU_ITEMS: MenuItem[] = [
 export const EVENTS: CafeEvent[] = [
   {
     id: 'evt-001',
-    title: 'Cafe Acoustics',
-    date: 'Wednesday, June 17, 2026',
-    time: '6:30 PM - 9:30 PM',
-    category: 'Arts & Music',
-    description: 'Enjoy acoustic live sets and heartwarming local poetry in our cafe space.',
-    location: 'Main Cafe Greenhouse Area',
-    image: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&q=80&w=600'
+    title: 'Expresso Your Potential: Barista & Resume Masterclass',
+    date: 'Saturday, June 27, 2026',
+    time: '10:30 AM - 12:30 PM',
+    category: 'Education',
+    description: 'Our custom hands-on session focusing on professional coffee brewing basics combined with Canva design layouts and resume polishing strategies to unlock local talent.',
+    location: 'Hummingbird Study Lounge',
+    image: 'https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&q=80&w=600'
   },
   {
     id: 'evt-002',
-    title: 'Illustration & Terrariums',
-    date: 'Saturday, June 20, 2026',
-    time: '11:00 AM - 1:00 PM',
-    category: 'Education',
-    description: 'Learn watercolor illustration followed by planting your own closed glass biome terrarium.',
-    location: 'Community Hub Workshop',
-    image: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=600'
+    title: 'Private Community Outreach Tea Party',
+    date: 'Sunday, July 5, 2026',
+    time: '2:00 PM - 5:00 PM',
+    category: 'Community',
+    description: 'A cozy, sponsored charity gathering featuring premium organic tea, pastry pairings, and fun lighthearted games for local families, elders, and children to cultivate connection.',
+    location: 'Main Cafe Greenhouse Area',
+    image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=600'
   },
   {
     id: 'evt-003',
-    title: 'Urban Conservation & Meetup Forum',
-    date: 'Tuesday, June 23, 2026',
-    time: '7:00 PM - 8:30 PM',
-    category: 'Nature',
-    description: 'Open panel with local neighbors regarding sustainable, organic urban rewilding and composting.',
-    location: 'Hummingbird Study Lounge',
-    image: 'https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&q=80&w=600'
+    title: 'Noon Network Nibbling Showcase Mixer',
+    date: 'Wednesday, July 8, 2026',
+    time: '12:00 PM - 2:00 PM',
+    category: 'Community',
+    description: 'Our premium professional speed-networking slot and signature Mediterranean hot buffet lunch. Exchange business cards, share insights, and spark partnerships.',
+    location: 'Community Hub Workshop',
+    image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=600'
   }
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: 'test-001',
-    name: 'Eleanor Vance',
-    role: 'Local Urban Ecologist',
-    text: "Hummingbird isn't just my favorite coffee and lunch stop; it's a living, breathing retreat. Working on my field records under the vibrant canopy with a hot Matcha is pure therapeutic bliss.",
+    name: 'Julie S.',
+    role: 'Local Google Reviewer',
+    text: "Super friendly service and the coffee is excellent. The selection of healthy options, particularly the toasted wraps, fresh salads, and custom bakes, is fantastic. We loved relaxing in their beautiful new Eurocity spot!",
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150'
   },
   {
     id: 'test-002',
-    name: 'Marcus Brody',
-    role: 'Acoustic Guitarist & Singer',
-    text: 'Performing at the Rainforest Canopy acoustics night felt truly divine. The sound echoes beautifully through the Monstera leaves, and the community is warm, attentive, and collaborative.',
+    name: 'Peter B.',
+    role: 'Gibraltar Local Guide',
+    text: "Amazing space, brilliant hospitality and outstanding specialty coffee. Highly recommend for any dietary preference – they have a great selection of gluten-free treats and plant-based dishes. Easily the finest cafe on the Rock!",
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150'
   },
   {
     id: 'test-003',
-    name: 'Samir Patel',
-    role: 'Neighborhood Community Organizer',
-    text: 'Designing community initiatives can be complex, but Hummingbird welcomed our monthly forums with open arms. They embody the authentic spirit of bringing people together to nurture both humans and nature.',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150'
+    name: 'Sarah T.',
+    role: 'Eurocity Regular Paton',
+    text: "Absolutely lovely cafe! The atmosphere is always warm and incredibly welcoming, the lattes are delicious, and the staff are exceptionally attentive. It's the perfect place to catch up on work or meet friends.",
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150'
+  },
+  {
+    id: 'test-004',
+    name: 'Marcus G.',
+    role: 'Verified Customer',
+    text: "A massive upgrade at their gorgeous new location in Eurocity Passage! Top-tier specialty espresso, healthy food prepared fresh daily, and wonderfully kind customer service. It truly is a sanctuary.",
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150'
   }
 ];

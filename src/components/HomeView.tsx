@@ -314,14 +314,14 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
                 onClick={() => onNavigate('menu')}
                 className="px-6 py-2.5 bg-primary-green hover:bg-primary-green/95 text-white text-xs font-bold rounded-full transition-transform hover:scale-105 active:scale-95 shadow-md flex items-center gap-1.5 cursor-pointer"
               >
-                Wander Entire Menu
+                View Menu
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => onNavigate('members')}
                 className="px-6 py-2.5 bg-white/5 hover:bg-white/10 text-white border border-white/15 text-xs font-semibold rounded-full transition-all backdrop-blur-sm cursor-pointer"
               >
-                Digital Membership Portal
+                See Membership Perks
               </button>
             </div>
           </div>
@@ -522,13 +522,24 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
           4. TESTIMONIALS CAROUSEL
           ========================================================================= */}
       <section className="bg-[#191919] border border-white/5 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+        {/* Glow backdrop shadow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-primary-green/5 rounded-full blur-[120px] pointer-events-none" />
+        
         <div className="absolute -top-10 left-10 text-[100px] text-white/2 font-serif select-none pointer-events-none">&ldquo;</div>
         
         <div className="max-w-2xl mx-auto space-y-6 relative z-10">
-          <div className="flex justify-center gap-1">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 text-primary-green fill-primary-green" />
-            ))}
+          
+          {/* Google Reviews Badge Header */}
+          <div className="flex flex-col items-center gap-1.5 pb-2">
+            <div className="flex items-center gap-2">
+              <span className="font-serif text-lg font-bold text-white tracking-tight flex items-center">
+                Guest Reviews on <span className="text-[#4285F4] ml-1">G</span><span className="text-[#EA4335]">o</span><span className="text-[#FBBC05]">o</span><span className="text-[#4285F4]">g</span><span className="text-[#34A853]">l</span><span className="text-[#EA4335]">e</span>
+              </span>
+              <span className="text-[10px] bg-primary-green/15 text-primary-green px-2.5 py-0.5 rounded-full font-mono font-bold border border-primary-green/15">
+                4.8 ★★★★★
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 font-light">Real guest accounts from our Gibraltar establishment at Eurocity Passage</p>
           </div>
 
           <div className="min-h-[120px] flex items-center justify-center">
@@ -552,15 +563,25 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
             </span>
           </div>
 
-          {/* Added Google Reviews Link */}
-          <a
-            href="https://www.google.com/search?q=Hummingbird+Café+Reviews+gibraltar"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-4 text-xs font-bold text-primary-green uppercase tracking-widest hover:underline"
-          >
-            Read Our Google Reviews
-          </a>
+          {/* Action CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <a
+              href="https://www.google.com/search?q=The+Hummingbird+Caf%C3%A9+Reviews+gibraltar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-green text-white hover:bg-primary-green/90 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-primary-green/10"
+            >
+              Read Our Google Reviews
+            </a>
+            <a
+              href="https://www.google.com/search?q=The+Hummingbird+Caf%C3%A9+Reviews+gibraltar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 rounded-full text-xs font-semibold text-gray-300 transition-all"
+            >
+              Write a Review
+            </a>
+          </div>
 
           <div className="flex justify-center gap-3 pt-4">
             {TESTIMONIALS.map((_, idx) => (

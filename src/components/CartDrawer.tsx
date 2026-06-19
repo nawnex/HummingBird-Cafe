@@ -122,19 +122,20 @@ export default function CartDrawer({
               <div className="space-y-4">
                 {/* Simulated login discount banner for non-members */}
                 {!isLoggedIn && (
-                  <div className="p-2.5 bg-primary-green/10 border border-[#689628]/35 rounded-xl flex items-start gap-2 max-w-full">
-                    <Sparkles className="w-4 h-4 text-[#A7CCED] shrink-0 mt-0.5" />
+                  <div className="p-2 bg-primary-green/5 border border-primary-green/10 rounded-lg flex items-start gap-2 max-w-full my-1 mb-2 text-left">
+                    <Sparkles className="w-3.5 h-3.5 text-[#519BF0] shrink-0 mt-0.5" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-300 leading-normal">
+                      <p className="text-[11px] text-gray-300 leading-normal font-sans">
                         Hummingbird members unlock 10% off discount automatically.{' '}
                         <button
                           type="button"
                           onClick={() => {
+                            onClose();
                             if (onNavigate) onNavigate('members');
                           }}
-                          className="text-[#A7CCED] hover:text-white hover:underline cursor-pointer font-bold inline"
+                          className="text-[#519BF0] hover:text-[#7AB5F8] hover:underline cursor-pointer font-bold inline"
                         >
-                          Join Now
+                          Join
                         </button>
                       </p>
                     </div>
