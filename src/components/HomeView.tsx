@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MenuItem } from '../types';
+import { MenuItem, MemberProfile } from '../types';
 import { MENU_ITEMS, TESTIMONIALS } from '../data';
 import { 
   Leaf, ArrowRight, Star, Heart, Calendar, ArrowLeft, Plus, 
-  Eye, Sparkles, Flame, Clock, ChevronLeft, ChevronRight, AlertTriangle 
+  Eye, Sparkles, Flame, Clock, ChevronLeft, ChevronRight, AlertTriangle, ArrowRight as ArrowRightIcon
 } from 'lucide-react';
 
 import saladImage from '../assets/images/salad_bowl_1781625701927.jpg';
@@ -13,20 +13,34 @@ import coffeeImage from '../assets/images/premium_coffees_1781625748410.jpg';
 import toastImage from '../assets/images/gourmet_toasts_1781625764968.jpg';
 import teaImage from '../assets/images/teas_infusions_1781625780459.jpg';
 import hummingbirdLogo from '../assets/images/regenerated_image_1781625058014.webp';
+import hummingbirdStampLogo from '../assets/images/regenerated_image_1782303722732.png';
+
+// Preload instantly at module parsing phase to leverage early network socket download allocation
+if (typeof window !== 'undefined') {
+  const preloadImg1 = new Image();
+  preloadImg1.src = smoothieImage;
+  const preloadImg2 = new Image();
+  preloadImg2.src = hummingbirdLogo;
+}
 
 interface HomeViewProps {
   onNavigate: (page: string) => void;
   onAddToCart: (item: MenuItem) => void;
   isLoggedIn?: boolean; 
+  memberProfile?: MemberProfile | null;
+  onOpenLoginModal?: () => void;
 }
 
 // 7 visually beautiful menu item IDs for our premium isometric showcase
 const FEATURED_HERO_IDS = ['tst-006', 'hom-002', 'swt-003', 'ice-001', 'sdw-005', 'cak-001', 'bkt-003'];
 
-export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeViewProps) {
+export default function HomeView({ onNavigate, onAddToCart, isLoggedIn, memberProfile, onOpenLoginModal }: HomeViewProps) {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [addedItemName, setAddedItemName] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  
+  const [guestName, setGuestName] = useState('');
+  const [memberNo] = useState(() => `HMB-${Math.floor(10000 + Math.random() * 90000)}`);
 
   // Isometric Scroll calculations & drag state
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -57,6 +71,35 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
       globalI: idx * heroItems.length + i,
     }))
   ).flat();
+
+  // Preload critical assets for the hero section to prioritize initial loading
+  useEffect(() => {
+    const imagesToPreload = [
+      { src: smoothieImage, type: 'image/jpeg' },
+      { src: hummingbirdLogo, type: 'image/webp' }
+    ];
+    
+    const links: HTMLLinkElement[] = [];
+    imagesToPreload.forEach(({ src, type }) => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = src;
+      link.type = type;
+      // @ts-ignore
+      link.fetchpriority = 'high';
+      document.head.appendChild(link);
+      links.push(link);
+    });
+
+    return () => {
+      links.forEach(link => {
+        if (document.head.contains(link)) {
+          document.head.removeChild(link);
+        }
+      });
+    };
+  }, []);
 
   // Auto-rotate testimonial carousel
   useEffect(() => {
@@ -269,16 +312,19 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
           alt="Gourmet botanical smoothies" 
           className="absolute inset-0 w-full h-full object-cover opacity-65 pointer-events-none"
           referrerPolicy="no-referrer"
+          loading="eager"
+          // @ts-ignore
+          fetchPriority="high"
         />
 
         {/* Deep ambient forest glows in margins */}
-        <div className="absolute inset-0 bg-[#060805]/40" />
+        <div className="absolute inset-0 bg-[#060805]/20" />
         <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-primary-green/10 rounded-full blur-[150px] pointer-events-none animate-pulse" />
         <div className="absolute -bottom-40 -right-40 w-[600px] h-[600px] bg-[#A7CCED]/5 rounded-full blur-[150px] pointer-events-none" />
 
         {/* Dynamic deep glass ambient dark overlays for perfect text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/60 to-[#121212] z-0 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-[#121212] z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 z-0 pointer-events-none" />
 
         {/* Center Container bounding the content */}
         <div className="max-w-4xl mx-auto w-full relative z-10 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center gap-6">
@@ -293,6 +339,9 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
                 alt="Hummingbird Logo" 
                 className="w-full h-full object-contain filter drop-shadow-[0_0_35px_rgba(130,195,65,0.65)] transition-all duration-500 hover:scale-110"
                 referrerPolicy="no-referrer"
+                loading="eager"
+                // @ts-ignore
+                fetchPriority="high"
               />
             </div>
             
@@ -463,26 +512,289 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn }: HomeVi
         </div>
       </section>
 
-      {/* Main content below Hero/Carousel - constrained to max-w-7xl and centered */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24 pt-16">
-
       {/* =========================================================================
-          2. JOIN OUR COMMUNITY SECTIONS
+          2. THE VINTAGE MEMBER PASS SHOWCASE (Hummingbird Core Membership)
           ========================================================================= */}
-      <section className="bg-white/5 border border-white/5 rounded-3xl p-12 text-center space-y-6">
-        <h2 className="text-4xl font-serif text-white">Join Our Community</h2>
-        <p className="text-gray-400 max-w-lg mx-auto">Connect with like-minded creatives through our exclusive membership clubs</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-          <div className="bg-black/40 p-6 rounded-2xl border border-white/5 space-y-2">
-            <h3 className="text-xl font-serif text-white">Explore Our Community</h3>
-            <p className="text-gray-400 text-sm">Connect with like-minded creatives through our exclusive clubs</p>
+      <section className="w-full bg-[#E5A094] py-16 md:py-24 text-center space-y-8 relative overflow-hidden flex flex-col items-center justify-center border-y border-black/5" id="home-membership-section">
+        
+        {/* Paper texture overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12)_0%,rgba(0,0,0,0.06)_100%)] pointer-events-none" />
+
+        <div className="max-w-2xl mx-auto space-y-3 z-10 text-[#5F1D11]">
+          <h2 className="text-3xl md:text-5xl font-serif font-black tracking-tight uppercase">
+            The Hummingbird Circle Pass
+          </h2>
+          <p className="text-sm font-medium leading-relaxed max-w-lg mx-auto opacity-90">
+            Secure flat daily savings, premium welcome rewards, and exclusive member-only benefits. View your official credential pass below:
+          </p>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 w-full flex flex-col items-center gap-10 relative z-10">
+          
+          {/* CARD 1: OFFICIAL MEMBERSHIP IDENTIFICATION CARD */}
+          <div className="relative w-full max-w-[620px] bg-[#FAF6EE] text-[#C54E35] p-6 sm:p-10 rounded-[1.75rem] border border-black/[0.05] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35),0_8px_16px_rgba(0,0,0,0.15)] overflow-hidden">
+            
+            {/* Real Card Scratches, Dust & Texture Overlays */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.22] mix-blend-multiply select-none">
+              <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <filter id="noise-overlay-home">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+                  <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" />
+                </filter>
+                <rect width="100%" height="100%" filter="url(#noise-overlay-home)" />
+                
+                {/* Fine realistic scratches */}
+                <path d="M 40,30 L 65,35 M 480,85 L 450,110 M 210,180 L 220,195" stroke="white" strokeWidth="0.5" strokeLinecap="round" opacity="0.65" />
+                <path d="M 120,280 L 145,270 M 520,35 L 530,50 M 350,190 L 375,180" stroke="white" strokeWidth="0.5" strokeLinecap="round" opacity="0.65" />
+                <path d="M 90,130 L 70,150 M 180,60 L 195,50" stroke="#C54E35" strokeWidth="0.5" strokeLinecap="round" opacity="0.25" />
+                <path d="M 310,310 L 295,320 M 490,240 L 510,230" stroke="#C54E35" strokeWidth="0.5" strokeLinecap="round" opacity="0.25" />
+                
+                {/* Subtle splotches */}
+                <circle cx="95" cy="210" r="1.5" fill="#B9442D" opacity="0.2" />
+                <circle cx="380" cy="50" r="1" fill="#B9442D" opacity="0.15" />
+                <circle cx="250" cy="290" r="2" fill="#B9442D" opacity="0.2" />
+                <circle cx="540" cy="180" r="1.5" fill="#B9442D" opacity="0.15" />
+              </svg>
+            </div>
+
+            {/* Vertical Fold Crease Line (Absolute center shadow/highlight) */}
+            <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-gradient-to-b from-black/[0.04] via-black/[0.1] to-black/[0.04] border-r border-white/40 pointer-events-none z-10" />
+
+            {/* Top Header */}
+            <div className="text-center space-y-1 relative z-10 pb-6 sm:pb-8">
+              <span className="text-[10px] sm:text-xs font-sans font-black tracking-[0.25em] uppercase text-[#C54E35]/70 block leading-none">
+                Official Member Of The
+              </span>
+              <h2 className="text-xl sm:text-3xl font-black tracking-tight uppercase text-[#C54E35] font-sans leading-none">
+                Hummingbird Circle
+              </h2>
+            </div>
+
+            {/* Card Content Layout */}
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-8 items-center relative z-10">
+              
+              {/* Stamp on the Left (Col 5) */}
+              <div className="sm:col-span-5 flex justify-center">
+                <div className="relative select-none filter drop-shadow-md">
+                  {/* Custom Stamp Border with 4-side teeth cutouts */}
+                  <svg width="130" height="170" viewBox="0 0 130 170" className="w-32 h-40">
+                    <path d="
+                      M 5,5 
+                      Q 5,0 10,0 Q 15,0 15,5
+                      Q 15,0 20,0 Q 25,0 25,5
+                      Q 25,0 30,0 Q 35,0 35,5
+                      Q 35,0 40,0 Q 45,0 45,5
+                      Q 45,0 50,0 Q 55,0 55,5
+                      Q 55,0 60,0 Q 65,0 65,5
+                      Q 65,0 70,0 Q 75,0 75,5
+                      Q 75,0 80,0 Q 85,0 85,5
+                      Q 85,0 90,0 Q 95,0 95,5
+                      Q 95,0 100,0 Q 105,0 105,5
+                      Q 105,0 110,0 Q 115,0 115,5
+                      Q 115,0 120,0 Q 125,0 125,5
+                      
+                      L 125,10
+                      Q 130,10 130,15 Q 130,20 125,20
+                      Q 130,20 130,25 Q 130,30 125,30
+                      Q 130,30 130,35 Q 130,40 125,40
+                      Q 130,40 130,45 Q 130,50 125,50
+                      Q 130,50 130,55 Q 130,60 125,60
+                      Q 130,60 130,65 Q 130,70 125,70
+                      Q 130,70 130,75 Q 130,80 125,80
+                      Q 130,80 130,85 Q 130,90 125,90
+                      Q 130,90 130,95 Q 130,100 125,100
+                      Q 130,100 130,105 Q 130,110 125,110
+                      Q 130,110 130,115 Q 130,120 125,120
+                      Q 130,120 130,125 Q 130,130 125,130
+                      Q 130,130 130,135 Q 130,140 125,140
+                      Q 130,140 130,145 Q 130,150 125,150
+                      Q 130,150 130,155 Q 130,160 125,160
+                      
+                      L 120,165
+                      Q 120,170 115,170 Q 110,170 110,165
+                      Q 110,170 105,170 Q 100,170 100,165
+                      Q 100,170 95,170 Q 90,170 90,165
+                      Q 90,170 85,170 Q 80,170 80,165
+                      Q 80,170 75,170 Q 70,170 70,165
+                      Q 70,170 65,170 Q 60,170 60,165
+                      Q 60,170 55,170 Q 50,170 50,165
+                      Q 50,170 45,170 Q 40,170 40,165
+                      Q 40,170 35,170 Q 30,170 30,165
+                      Q 30,170 25,170 Q 20,170 20,165
+                      Q 20,170 15,170 Q 10,170 10,165
+                      Q 10,170 5,170 Q 0,170 0,165
+                      
+                      L 5,160
+                      Q 0,160 0,155 Q 0,150 5,150
+                      Q 0,150 0,145 Q 0,140 5,140
+                      Q 0,140 0,135 Q 0,130 5,130
+                      Q 0,130 0,125 Q 0,120 5,120
+                      Q 0,120 0,115 Q 0,110 5,110
+                      Q 0,110 0,105 Q 0,100 5,100
+                      Q 0,100 0,95 Q 0,90 5,90
+                      Q 0,90 0,85 Q 0,80 5,80
+                      Q 0,80 0,75 Q 0,70 5,70
+                      Q 0,70 0,65 Q 0,60 5,60
+                      Q 0,65 0,60 Q 0,55 5,55
+                      Q 0,55 0,50 Q 0,45 5,45
+                      Q 0,45 0,40 Q 0,35 5,35
+                      Q 0,35 0,30 Q 0,25 5,25
+                      Q 0,25 0,20 Q 0,15 5,15
+                      Q 0,15 0,10 Q 0,5 5,5
+                      Z" fill="#C54E35" />
+                    <rect x="12" y="12" width="106" height="146" rx="2" fill="none" stroke="#FAF6EE" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.8" />
+                  </svg>
+                  <div className="absolute inset-0 p-4 flex flex-col justify-between items-center text-center text-[#FAF6EE]">
+                    <span className="text-[8px] font-mono tracking-widest uppercase font-bold text-[#FAF6EE]/80 mt-1">EST. 2026</span>
+                    <div className="my-1 flex flex-col items-center justify-center">
+                      <img 
+                        src={hummingbirdStampLogo} 
+                        alt="Hummingbird Logo" 
+                        className="w-16 h-16 object-contain"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <div className="text-center space-y-0.5 mb-2">
+                      <span className="text-[11px] font-black tracking-tight uppercase font-serif block leading-none">HUMMINGBIRD</span>
+                      <span className="text-[8px] font-mono tracking-wider uppercase opacity-85 block leading-none">GIBRALTAR</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fields on the Right (Col 7) */}
+              <div className="sm:col-span-7 space-y-6 text-left w-full">
+                
+                {/* NAME Field */}
+                <div className="space-y-1">
+                  <span className="text-[9px] font-sans font-bold uppercase tracking-widest text-[#C54E35]/65 block leading-none">
+                    NAME
+                  </span>
+                  <div className="border-b border-[#C54E35]/40 pb-1 text-base font-serif italic text-[#C54E35] font-semibold min-h-[28px]">
+                    {/* Empty line with no input options or interactions */}
+                  </div>
+                </div>
+
+                {/* MEMBER SINCE Field */}
+                <div className="space-y-1">
+                  <span className="text-[9px] font-sans font-bold uppercase tracking-widest text-[#C54E35]/65 block leading-none">
+                    MEMBER SINCE
+                  </span>
+                  <div className="border-b border-[#C54E35]/40 pb-1 text-sm font-serif italic text-[#C54E35] font-semibold min-h-[24px]">
+                    {/* Empty line with no input options or interactions */}
+                  </div>
+                </div>
+
+                {/* MEMBER NO Field */}
+                <div className="space-y-1">
+                  <span className="text-[9px] font-sans font-bold uppercase tracking-widest text-[#C54E35]/65 block leading-none">
+                    MEMBER NO.
+                  </span>
+                  <div className="border-b border-[#C54E35]/40 pb-1 text-sm font-serif italic text-[#C54E35] font-semibold min-h-[24px]">
+                    {/* Empty line with no input options or interactions */}
+                  </div>
+                </div>
+
+              </div>
+            </div>
           </div>
-          <div className="bg-black/40 p-6 rounded-2xl border border-white/5 space-y-2">
-            <h3 className="text-xl font-serif text-white">Book & Writing Clubs</h3>
-            <p className="text-gray-400 text-sm">Connect with like-minded creatives through our exclusive clubs</p>
+
+          {/* CARD 2: THE MEMBERSHIP CREED & BENEFITS CARD */}
+          <div className="relative w-full max-w-[620px] bg-[#FAF6EE] text-[#C54E35] p-6 sm:p-10 rounded-[1.75rem] border border-black/[0.05] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35),0_8px_16px_rgba(0,0,0,0.15)] overflow-hidden">
+            
+            {/* Scratches and noise Overlay */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.22] mix-blend-multiply select-none">
+              <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100%" height="100%" filter="url(#noise-overlay-home)" />
+                <path d="M 50,45 L 75,40 M 320,80 L 290,105 M 400,220 L 415,235" stroke="white" strokeWidth="0.5" strokeLinecap="round" opacity="0.65" />
+                <path d="M 110,140 L 90,160 M 280,50 L 295,40" stroke="#C54E35" strokeWidth="0.5" strokeLinecap="round" opacity="0.25" />
+                <circle cx="150" cy="270" r="1.5" fill="#B9442D" opacity="0.2" />
+                <circle cx="440" cy="80" r="1.5" fill="#B9442D" opacity="0.15" />
+              </svg>
+            </div>
+
+            {/* Vertical Fold Crease Line */}
+            <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-gradient-to-b from-black/[0.04] via-black/[0.1] to-black/[0.04] border-r border-white/40 pointer-events-none z-10" />
+
+            {/* Coffee Mug Ring Stain (Added for ultra-premium vintage fidelity) */}
+            <div className="absolute -bottom-8 -right-8 opacity-[0.11] pointer-events-none select-none z-0">
+              <svg width="150" height="150" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="42" stroke="#C54E35" strokeWidth="1.5" strokeDasharray="30 4 12 6 15 2" />
+                <circle cx="48" cy="52" r="41" stroke="#C54E35" strokeWidth="0.5" strokeDasharray="5 15 20" />
+              </svg>
+            </div>
+
+            {/* Binder Clip resting on top right of the card */}
+            <div className="absolute top-4 right-10 rotate-12 pointer-events-none select-none z-20 opacity-95">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14,34 C12,18 20,12 24,12 C28,12 36,18 34,34" stroke="#8E8E93" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+                <path d="M18,34 C16,22 22,16 24,16 C26,16 32,22 30,34" stroke="#AEAEB2" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                <path d="M10,32 L38,32 L34,44 L14,44 Z" fill="#2C2C2E" />
+                <rect x="14" y="34" width="20" height="2" fill="#48484A" />
+                <path d="M12,32 L36,32" stroke="#1C1C1E" strokeWidth="1" />
+                <text x="24" y="41" fill="#DFBA73" fontSize="5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">HMB CLUB</text>
+              </svg>
+            </div>
+
+            {/* Card Creed Header */}
+            <div className="text-center relative z-10 pb-6 border-b border-[#C54E35]/15">
+              <h3 className="text-xs font-sans font-black tracking-[0.22em] uppercase text-[#C54E35]/85">
+                The Hummingbird Circle Creed &amp; Perks
+              </h3>
+            </div>
+
+            {/* Perks Bullets */}
+            <ul className="space-y-4 pt-6 text-left relative z-10 pr-4 sm:pr-8">
+              <li className="flex items-start gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-2" />
+                <p className="text-[11px] sm:text-xs font-sans text-[#C54E35]/90 leading-relaxed font-semibold">
+                  <strong>Daily Specialty Fuel</strong> — High-end barista coffees, freshly grilled artisan wraps, and custom bowls worth up to £250/month.
+                </p>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-2" />
+                <p className="text-[11px] sm:text-xs font-sans text-[#C54E35]/90 leading-relaxed font-semibold">
+                  <strong>Automatic Discounts Applied</strong> — Save 10% on every order instantly upon presenting your card at checkout.
+                </p>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-2" />
+                <p className="text-[11px] sm:text-xs font-sans text-[#C54E35]/90 leading-relaxed font-semibold">
+                  <strong>Early Workshop Seats</strong> — VIP priority access to evening barista courses, food design, and wellness masterclasses.
+                </p>
+              </li>
+              <li className="flex items-start gap-3 border-t border-[#C54E35]/15 pt-3.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-2" />
+                <p className="text-[11px] sm:text-xs font-sans text-[#C54E35] leading-relaxed font-bold italic">
+                  All consolidated inside a single physical-digital pass for just £39 per month.
+                </p>
+              </li>
+            </ul>
           </div>
+
+          {/* Interactive JOIN THE CIRCLE CTA Button */}
+          <div className="flex justify-center pt-2 relative z-10">
+            <button
+              onClick={() => {
+                if (isLoggedIn) {
+                  onNavigate('account');
+                } else if (onOpenLoginModal) {
+                  onOpenLoginModal();
+                }
+              }}
+              className="px-12 py-4 bg-[#C54E35] hover:bg-[#B1412B] text-[#FAF6EE] font-black uppercase text-xs tracking-widest transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-[0_15px_30px_rgba(197,78,53,0.35)] rounded-xl flex items-center gap-3 cursor-pointer"
+              id="home-join-now-btn"
+            >
+              <span>{isLoggedIn ? 'VIEW MY STATUS' : 'JOIN THE CIRCLE NOW'}</span>
+              <ArrowRightIcon className="w-4 h-4 text-[#FAF6EE] stroke-[2.5]" />
+            </button>
+          </div>
+
         </div>
       </section>
+
+      {/* Main content below Hero/Carousel - constrained to max-w-7xl and centered */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24 pt-16">
 
       {/* =========================================================================
           3. WHAT DO WE SERVE? SECTIONS

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { MenuItem, CartItem, MemberProfile } from './types';
+import { auth, onAuthStateChanged, signOut } from './lib/firebase';
 
 // Component Views
 import CustomCursor from './components/CustomCursor';
@@ -8,8 +9,11 @@ import HomeView from './components/HomeView';
 import MenuView from './components/MenuView';
 import EventsView from './components/EventsView';
 import MembersView from './components/MembersView';
+import ClubsView from './components/ClubsView';
+import AccountView from './components/AccountView';
 import AboutView from './components/AboutView';
 import ContactView from './components/ContactView';
+import LoginModal from './components/LoginModal';
 import hummingbirdLogo from './assets/images/regenerated_image_1781625058014.webp';
 
 // Icons
@@ -17,11 +21,72 @@ import { Leaf, ShoppingBag, User, Clock, MapPin, Heart, ArrowRight, Menu, X } fr
 
 export default function App() {
   const [currentView, setCurrentView] = useState<string>('home');
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [memberProfile, setMemberProfile] = useState<MemberProfile | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('isLoggedIn') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [memberProfile, setMemberProfile] = useState<MemberProfile | null>(() => {
+    try {
+      const saved = localStorage.getItem('memberProfile');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+
+  // Sync login state changes to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('isLoggedIn', String(isLoggedIn));
+    } catch (e) {
+      console.error('LocalStorage write error:', e);
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    try {
+      if (memberProfile) {
+        localStorage.setItem('memberProfile', JSON.stringify(memberProfile));
+      } else {
+        localStorage.removeItem('memberProfile');
+      }
+    } catch (e) {
+      console.error('LocalStorage profile write error:', e);
+    }
+  }, [memberProfile]);
+
+  // Listen for Firebase Auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        // If we don't have a profile or the email is different, generate one
+        setMemberProfile((prev) => {
+          if (prev && prev.email === user.email) return prev;
+          const displayName = user.displayName || user.email?.split('@')[0] || 'Member';
+          const capitalizedName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+          return {
+            name: capitalizedName,
+            email: user.email || '',
+            cardNumber: `HMB-2409-${Math.floor(1000 + Math.random() * 9000)}`,
+            joinedDate: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+            points: 120
+          };
+        });
+      } else {
+        setIsLoggedIn(false);
+        setMemberProfile(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Reset scroll to top on any view/page change
   useEffect(() => {
@@ -33,6 +98,7 @@ export default function App() {
     { key: 'home', label: 'Home' },
     { key: 'menu', label: 'Menu' },
     { key: 'events', label: 'Events' },
+    { key: 'clubs', label: 'Clubs' },
     { key: 'members', label: 'Members' },
     { key: 'contact', label: 'Contact' },
     { key: 'about', label: 'About' }
@@ -50,7 +116,12 @@ export default function App() {
     });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error('Firebase signout error:', e);
+    }
     setIsLoggedIn(false);
     setMemberProfile(null);
   };
@@ -178,11 +249,15 @@ export default function App() {
             
             {/* Account Icon System */}
             <button
-              onClick={() => setCurrentView('members')}
+              onClick={() => {
+                setCurrentView('account');
+              }}
               className={`p-2 transition-all flex items-center justify-center relative cursor-pointer ${
-                isLoggedIn 
-                  ? 'text-[#A7CCED]' 
-                  : 'text-gray-300 hover:text-white'
+                currentView === 'account'
+                  ? 'text-primary-green'
+                  : isLoggedIn 
+                    ? 'text-[#A7CCED]' 
+                    : 'text-gray-300 hover:text-white'
               }`}
               title={isLoggedIn ? `Logged in as ${memberProfile?.name}` : 'Login / Member portal'}
             >
@@ -229,12 +304,27 @@ export default function App() {
               {link.label}
             </button>
           ))}
+          {/* Also add Account button in Mobile Menu to make it super obvious */}
+          <button
+            onClick={() => {
+              setCurrentView('account');
+              setIsMobileMenuOpen(false);
+            }}
+            className={`p-4 rounded-xl text-left text-sm font-semibold transition-all flex items-center justify-between ${
+              currentView === 'account'
+                ? 'bg-primary-green/20 text-[#A7CCED]'
+                : 'text-gray-300'
+            }`}
+          >
+            <span>{isLoggedIn ? `Account (${memberProfile?.name})` : 'My Account / Sign In'}</span>
+            <User className="w-4 h-4 text-primary-green" />
+          </button>
         </div>
       )}
 
       {/* 4. Main Atmospheric Body */}
       <main className={`flex-1 w-full mx-auto z-10 ${
-        (currentView === 'home' || currentView === 'menu')
+        (currentView === 'home' || currentView === 'menu' || currentView === 'members' || currentView === 'clubs')
           ? ''
           : 'max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 md:pt-10'
       }`}>
@@ -246,6 +336,8 @@ export default function App() {
               onNavigate={(page) => setCurrentView(page)} 
               onAddToCart={handleAddToCart}
               isLoggedIn={isLoggedIn}
+              memberProfile={memberProfile}
+              onOpenLoginModal={() => setIsLoginModalOpen(true)}
             />
           )}
 
@@ -266,8 +358,22 @@ export default function App() {
             <MembersView 
               isLoggedIn={isLoggedIn}
               memberProfile={memberProfile}
-              onLogin={handleLogin}
+              onOpenLoginModal={() => setIsLoginModalOpen(true)}
+              onNavigate={(page) => setCurrentView(page)}
+            />
+          )}
+
+          {currentView === 'clubs' && (
+            <ClubsView />
+          )}
+
+          {currentView === 'account' && (
+            <AccountView 
+              isLoggedIn={isLoggedIn}
+              memberProfile={memberProfile}
               onLogout={handleLogout}
+              onOpenLoginModal={() => setIsLoginModalOpen(true)}
+              onNavigate={(page) => setCurrentView(page)}
             />
           )}
 
@@ -295,6 +401,13 @@ export default function App() {
           setIsCartOpen(false);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
+      />
+
+      {/* 5.5. Google Secure Sign-in Portal Modal overlay */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        onLogin={handleLogin} 
       />
 
       {/* 6. Footer section */}
