@@ -515,7 +515,7 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn, memberPr
       {/* =========================================================================
           2. THE VINTAGE MEMBER PASS SHOWCASE (Hummingbird Core Membership)
           ========================================================================= */}
-      <section className="w-full bg-[#E5A094] py-16 md:py-24 text-center space-y-8 relative overflow-hidden flex flex-col items-center justify-center border-y border-black/5" id="home-membership-section">
+      <section className="w-full bg-[#E5A094] py-8 md:py-12 text-center space-y-8 relative overflow-hidden flex flex-col items-center justify-center border-y border-black/5" id="home-membership-section">
         
         {/* Paper texture overlay */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12)_0%,rgba(0,0,0,0.06)_100%)] pointer-events-none" />
@@ -525,14 +525,14 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn, memberPr
             The Hummingbird Circle Pass
           </h2>
           <p className="text-sm font-medium leading-relaxed max-w-lg mx-auto opacity-90">
-            Secure flat daily savings, premium welcome rewards, and exclusive member-only benefits. View your official credential pass below:
+            Secure flat daily savings, premium welcome rewards, and exclusive member-only benefits.
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 w-full flex flex-col items-center gap-10 relative z-10">
           
           {/* CARD 1: OFFICIAL MEMBERSHIP IDENTIFICATION CARD */}
-          <div className="relative w-full max-w-[620px] bg-[#FAF6EE] text-[#C54E35] p-6 sm:p-10 rounded-[1.75rem] border border-black/[0.05] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35),0_8px_16px_rgba(0,0,0,0.15)] overflow-hidden">
+          <div className="relative w-[345px] h-[225px] sm:w-[620px] sm:h-[360px] bg-[#FAF6EE] text-[#C54E35] p-4 sm:p-10 rounded-[1.75rem] border border-black/[0.05] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35),0_8px_16px_rgba(0,0,0,0.15)] overflow-hidden shrink-0">
             
             {/* Real Card Scratches, Dust & Texture Overlays */}
             <div className="absolute inset-0 pointer-events-none opacity-[0.22] mix-blend-multiply select-none">
@@ -561,23 +561,23 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn, memberPr
             <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-gradient-to-b from-black/[0.04] via-black/[0.1] to-black/[0.04] border-r border-white/40 pointer-events-none z-10" />
 
             {/* Top Header */}
-            <div className="text-center space-y-1 relative z-10 pb-6 sm:pb-8">
-              <span className="text-[10px] sm:text-xs font-sans font-black tracking-[0.25em] uppercase text-[#C54E35]/70 block leading-none">
+            <div className="text-center space-y-1 relative z-10 pb-2 sm:pb-8">
+              <span className="text-[9px] sm:text-xs font-sans font-black tracking-[0.25em] uppercase text-[#C54E35]/70 block leading-none">
                 Official Member Of The
               </span>
-              <h2 className="text-xl sm:text-3xl font-black tracking-tight uppercase text-[#C54E35] font-sans leading-none">
+              <h2 className="text-base sm:text-3xl font-black tracking-tight uppercase text-[#C54E35] font-sans leading-none">
                 Hummingbird Circle
               </h2>
             </div>
 
-            {/* Card Content Layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-12 gap-8 items-center relative z-10">
+            {/* Card Content Layout - remains landscape 12-column grid on mobile */}
+            <div className="grid grid-cols-12 gap-3 sm:gap-8 items-center relative z-10">
               
               {/* Stamp on the Left (Col 5) */}
-              <div className="sm:col-span-5 flex justify-center">
+              <div className="col-span-5 flex justify-center">
                 <div className="relative select-none filter drop-shadow-md">
-                  {/* Custom Stamp Border with 4-side teeth cutouts */}
-                  <svg width="130" height="170" viewBox="0 0 130 170" className="w-32 h-40">
+                  {/* Custom Stamp Border with 4-side teeth cutouts - responsive size */}
+                  <svg width="130" height="170" viewBox="0 0 130 170" className="w-24 h-32 sm:w-32 sm:h-40">
                     <path d="
                       M 5,5 
                       Q 5,0 10,0 Q 15,0 15,5
@@ -644,53 +644,53 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn, memberPr
                       Z" fill="#C54E35" />
                     <rect x="12" y="12" width="106" height="146" rx="2" fill="none" stroke="#FAF6EE" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.8" />
                   </svg>
-                  <div className="absolute inset-0 p-4 flex flex-col justify-between items-center text-center text-[#FAF6EE]">
-                    <span className="text-[8px] font-mono tracking-widest uppercase font-bold text-[#FAF6EE]/80 mt-1">EST. 2026</span>
+                  <div className="absolute inset-0 p-2 sm:p-4 flex flex-col justify-between items-center text-center text-[#FAF6EE]">
+                    <span className="text-[6px] sm:text-[8px] font-mono tracking-widest uppercase font-bold text-[#FAF6EE]/80 mt-1">EST. 2026</span>
                     <div className="my-1 flex flex-col items-center justify-center">
                       <img 
                         src={hummingbirdStampLogo} 
                         alt="Hummingbird Logo" 
-                        className="w-16 h-16 object-contain"
+                        className="w-10 h-10 sm:w-16 sm:h-16 object-contain"
                         referrerPolicy="no-referrer"
                       />
                     </div>
-                    <div className="text-center space-y-0.5 mb-2">
-                      <span className="text-[11px] font-black tracking-tight uppercase font-serif block leading-none">HUMMINGBIRD</span>
-                      <span className="text-[8px] font-mono tracking-wider uppercase opacity-85 block leading-none">GIBRALTAR</span>
+                    <div className="text-center space-y-0.5 mb-1 sm:mb-2">
+                      <span className="text-[8px] sm:text-[11px] font-black tracking-tight uppercase font-serif block leading-none">HUMMINGBIRD</span>
+                      <span className="text-[6px] sm:text-[8px] font-mono tracking-wider uppercase opacity-85 block leading-none">GIBRALTAR</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Fields on the Right (Col 7) */}
-              <div className="sm:col-span-7 space-y-6 text-left w-full">
+              <div className="col-span-7 space-y-2 sm:space-y-6 text-left w-full">
                 
                 {/* NAME Field */}
-                <div className="space-y-1">
-                  <span className="text-[9px] font-sans font-bold uppercase tracking-widest text-[#C54E35]/65 block leading-none">
+                <div className="space-y-0.5 sm:space-y-1">
+                  <span className="text-[8px] sm:text-[9px] font-sans font-bold uppercase tracking-widest text-[#C54E35]/65 block leading-none">
                     NAME
                   </span>
-                  <div className="border-b border-[#C54E35]/40 pb-1 text-base font-serif italic text-[#C54E35] font-semibold min-h-[28px]">
+                  <div className="border-b border-[#C54E35]/40 pb-0.5 sm:pb-1 text-xs sm:text-base font-serif italic text-[#C54E35] font-semibold min-h-[14px] sm:min-h-[28px]">
                     {/* Empty line with no input options or interactions */}
                   </div>
                 </div>
 
                 {/* MEMBER SINCE Field */}
-                <div className="space-y-1">
-                  <span className="text-[9px] font-sans font-bold uppercase tracking-widest text-[#C54E35]/65 block leading-none">
+                <div className="space-y-0.5 sm:space-y-1">
+                  <span className="text-[8px] sm:text-[9px] font-sans font-bold uppercase tracking-widest text-[#C54E35]/65 block leading-none">
                     MEMBER SINCE
                   </span>
-                  <div className="border-b border-[#C54E35]/40 pb-1 text-sm font-serif italic text-[#C54E35] font-semibold min-h-[24px]">
+                  <div className="border-b border-[#C54E35]/40 pb-0.5 sm:pb-1 text-xs sm:text-sm font-serif italic text-[#C54E35] font-semibold min-h-[14px] sm:min-h-[24px]">
                     {/* Empty line with no input options or interactions */}
                   </div>
                 </div>
 
                 {/* MEMBER NO Field */}
-                <div className="space-y-1">
-                  <span className="text-[9px] font-sans font-bold uppercase tracking-widest text-[#C54E35]/65 block leading-none">
+                <div className="space-y-0.5 sm:space-y-1">
+                  <span className="text-[8px] sm:text-[9px] font-sans font-bold uppercase tracking-widest text-[#C54E35]/65 block leading-none">
                     MEMBER NO.
                   </span>
-                  <div className="border-b border-[#C54E35]/40 pb-1 text-sm font-serif italic text-[#C54E35] font-semibold min-h-[24px]">
+                  <div className="border-b border-[#C54E35]/40 pb-0.5 sm:pb-1 text-xs sm:text-sm font-serif italic text-[#C54E35] font-semibold min-h-[14px] sm:min-h-[24px]">
                     {/* Empty line with no input options or interactions */}
                   </div>
                 </div>
@@ -700,7 +700,7 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn, memberPr
           </div>
 
           {/* CARD 2: THE MEMBERSHIP CREED & BENEFITS CARD */}
-          <div className="relative w-full max-w-[620px] bg-[#FAF6EE] text-[#C54E35] p-6 sm:p-10 rounded-[1.75rem] border border-black/[0.05] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35),0_8px_16px_rgba(0,0,0,0.15)] overflow-hidden">
+          <div className="relative w-[345px] h-[225px] sm:w-[620px] sm:h-[360px] bg-[#FAF6EE] text-[#C54E35] p-4 sm:p-10 rounded-[1.75rem] border border-black/[0.05] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35),0_8px_16px_rgba(0,0,0,0.15)] overflow-hidden shrink-0 flex flex-col justify-between">
             
             {/* Scratches and noise Overlay */}
             <div className="absolute inset-0 pointer-events-none opacity-[0.22] mix-blend-multiply select-none">
@@ -732,41 +732,42 @@ export default function HomeView({ onNavigate, onAddToCart, isLoggedIn, memberPr
                 <path d="M10,32 L38,32 L34,44 L14,44 Z" fill="#2C2C2E" />
                 <rect x="14" y="34" width="20" height="2" fill="#48484A" />
                 <path d="M12,32 L36,32" stroke="#1C1C1E" strokeWidth="1" />
+                <path d="M12,32 L36,32" stroke="#1C1C1E" strokeWidth="1" />
                 <text x="24" y="41" fill="#DFBA73" fontSize="5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">HMB CLUB</text>
               </svg>
             </div>
 
             {/* Card Creed Header */}
-            <div className="text-center relative z-10 pb-6 border-b border-[#C54E35]/15">
-              <h3 className="text-xs font-sans font-black tracking-[0.22em] uppercase text-[#C54E35]/85">
-                The Hummingbird Circle Creed &amp; Perks
+            <div className="text-center relative z-10 pb-2 sm:pb-4 border-b border-[#C54E35]/15">
+              <h3 className="text-[9px] sm:text-xs font-sans font-black tracking-[0.22em] uppercase text-[#C54E35]/85">
+                The Hummingbird Pass Perks
               </h3>
             </div>
 
             {/* Perks Bullets */}
-            <ul className="space-y-4 pt-6 text-left relative z-10 pr-4 sm:pr-8">
-              <li className="flex items-start gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-2" />
-                <p className="text-[11px] sm:text-xs font-sans text-[#C54E35]/90 leading-relaxed font-semibold">
-                  <strong>Daily Specialty Fuel</strong> — High-end barista coffees, freshly grilled artisan wraps, and custom bowls worth up to £250/month.
+            <ul className="flex-1 flex flex-col justify-between pt-3 sm:pt-6 text-left relative z-10 pr-2 sm:pr-8">
+              <li className="flex items-start gap-2">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-1.5" />
+                <p className="text-[10px] sm:text-sm font-sans text-[#C54E35] leading-snug sm:leading-relaxed font-bold">
+                  Enjoy premium barista coffees, freshly rolled artisan wraps, and nourish bowls daily.
                 </p>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-2" />
-                <p className="text-[11px] sm:text-xs font-sans text-[#C54E35]/90 leading-relaxed font-semibold">
-                  <strong>Automatic Discounts Applied</strong> — Save 10% on every order instantly upon presenting your card at checkout.
+              <li className="flex items-start gap-2">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-1.5" />
+                <p className="text-[10px] sm:text-sm font-sans text-[#C54E35] leading-snug sm:leading-relaxed font-bold">
+                  Save a flat 10% discount on every order.
                 </p>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-2" />
-                <p className="text-[11px] sm:text-xs font-sans text-[#C54E35]/90 leading-relaxed font-semibold">
-                  <strong>Early Workshop Seats</strong> — VIP priority access to evening barista courses, food design, and wellness masterclasses.
+              <li className="flex items-start gap-2">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-1.5" />
+                <p className="text-[10px] sm:text-sm font-sans text-[#C54E35] leading-snug sm:leading-relaxed font-bold">
+                  Priority early access and booking for all workshop slots and events.
                 </p>
               </li>
-              <li className="flex items-start gap-3 border-t border-[#C54E35]/15 pt-3.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-2" />
-                <p className="text-[11px] sm:text-xs font-sans text-[#C54E35] leading-relaxed font-bold italic">
-                  All consolidated inside a single physical-digital pass for just £39 per month.
+              <li className="flex items-start gap-2 border-t border-[#C54E35]/15 pt-2 sm:pt-4">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#C54E35] shrink-0 mt-1.5" />
+                <p className="text-[8px] sm:text-xs font-sans text-[#C54E35] leading-snug sm:leading-relaxed font-black italic">
+                  All premium Hummingbird Circle perks consolidated for just £39 per month.
                 </p>
               </li>
             </ul>
